@@ -1,0 +1,6535 @@
+{
+  "metadata": {
+    "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O",
+    "architecture": "arm64",
+    "started_utc": "2026-10-31T10:07:00.593828+00:00",
+    "tasks": 400,
+    "repeats": 5,
+    "warmup": 16,
+    "order_seed": 20261031,
+    "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.4.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+    "cmake": "cmake version 4.3.2\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).",
+    "protobuf": "libprotoc 36.2",
+    "grpc": "1.85.1",
+    "cpu": "Apple M5",
+    "logical_cpus": 10,
+    "source_sha256": {
+      "CMakeLists.txt": "c3e73b41226f457f1ebb0ae7ccaac3080361cb4ade95fc94b067fa69f9dcb122",
+      "benchmarks/benchmark.cpp": "912015e53ae9e4d2606d70d2d7de1931350c7faf2ecbbc373cdb4ec36beace14",
+      "benchmarks/run_suite.py": "97da89dca952603207be9dd1a7cb92096e70c5f7742dfb72d0c2593178ff8953",
+      "benchmarks/summarize.py": "7c409c07ec436a08991dea58dbd467fd08e8432c367a84c034fe2c2ff09b6bdd",
+      "include/miniray/cli.hpp": "cc2eb05645e7ae380af887bd158b91c12946d41dd0465c076c73d55939132200",
+      "include/miniray/client.hpp": "52a46f1f12b95dce950d29639df358419c4a1d907ee4768090c1b60b4b454779",
+      "include/miniray/common.hpp": "15d755ab2cef1d8d43beaec52d1252013ec2bb9efedd2507d2892cbd2e20aa9b",
+      "include/miniray/coordinator.hpp": "1f57f6986948f40e01ba90d6e66b7145548b6b5f88ef6577cc6a0b365b624bab",
+      "include/miniray/registry.hpp": "8610cba52acb7ce59a61727900d5fd6b8e847c854d3084872f769ea79b81d60f",
+      "include/miniray/scheduler.hpp": "394e86680af90a7acc92a5f8a34ad3f215f0f0da982f8684d8bb77931fa5fe17",
+      "include/miniray/state.hpp": "585873f0b55920edea18c8948d54170c01283c8600b9c87f5b634de2419b3a2c",
+      "include/miniray/worker.hpp": "44da7ecb7f5fc0bcf6c47bed395db5b3936ddb22b02dec89ff00224c047c0995",
+      "proto/miniray.proto": "ecba099ba9d78c68e24979dee78460dc6cfea812e3416d03f64068e8c457538d",
+      "src/builtins.cpp": "885a24be31ce11a7705a02188fffc9ebc5e8ceb7463378b7a2fc293328799803",
+      "src/client.cpp": "108d55af7786b86b6280c6c28a9d7d860408e33aa36454069770dafb56935704",
+      "src/coordinator.cpp": "f2cdff0dce2bdff9e761ec94f99aca2e49a102d8a00d56338d961600eb10dbab",
+      "src/coordinator_main.cpp": "c14c7d4210e1fe8159fcea4bec237490d4b69b184c337a4bd286a6088f8f118f",
+      "src/state.cpp": "7a5666fe4c073483f800703e8c49adc380fca1ba9a8e03bfae82edb0066e0ced",
+      "src/worker.cpp": "616ad262e7f5d693c18dd9a5817008fd19a8e5805d7dfd44d515cc96145539fc",
+      "src/worker_main.cpp": "c1660f9bba16ea4ff83a493e8f37f66bb4f906f314a1daaffe1df42b9f628dfa"
+    },
+    "benchmark_sha256": "21e6e0249e8df62efca53718bbb619dbd9c0e007e400c74b9550db9005f0de5c"
+  },
+  "cases": [
+    {
+      "case_id": "failure/least-loaded/remote/failure/2-2",
+      "scenario": "failure",
+      "mode": "remote",
+      "workload": "failure",
+      "capacities": [
+        2,
+        2
+      ],
+      "slots": 4,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 32,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 7.54644,
+          "min": 7.47543,
+          "max": 7.56945,
+          "iqr": 0.02090000000000014,
+          "mean": 7.537244,
+          "stdev": 0.03663841331171409
+        },
+        "elapsed_s": {
+          "median": 4.24041,
+          "min": 4.22752,
+          "max": 4.28069,
+          "iqr": 0.011740000000000528,
+          "mean": 4.245664,
+          "stdev": 0.020737339028911058
+        },
+        "p50_ms": {
+          "median": 2104.91,
+          "min": 2097.55,
+          "max": 2113.4,
+          "iqr": 12.509999999999764,
+          "mean": 2104.942,
+          "stdev": 7.158300776022128
+        },
+        "p95_ms": {
+          "median": 4220.3,
+          "min": 4214.75,
+          "max": 4231.69,
+          "iqr": 6.469999999999345,
+          "mean": 4221.066,
+          "stdev": 6.7184693197183405
+        },
+        "p99_ms": {
+          "median": 4227.38,
+          "min": 4216.03,
+          "max": 4269.86,
+          "iqr": 11.029999999999745,
+          "mean": 4233.46,
+          "stdev": 21.26991889970425
+        },
+        "queue_p99_ms": {
+          "median": 3698.02,
+          "min": 3675.29,
+          "max": 3733.91,
+          "iqr": 19.75,
+          "mean": 3700.846,
+          "stdev": 22.13772413776985
+        },
+        "scheduling_p99_ms": {
+          "median": 0.001041,
+          "min": 0.000833,
+          "max": 0.001292,
+          "iqr": 0.00016700000000000005,
+          "mean": 0.0010666,
+          "stdev": 0.00017359809906793334
+        },
+        "slot_utilization": {
+          "median": 0.48426,
+          "min": 0.481887,
+          "max": 0.485539,
+          "iqr": 0.001489000000000018,
+          "mean": 0.4839318,
+          "stdev": 0.0014130250174713822
+        },
+        "accepted": {
+          "median": 32,
+          "min": 32,
+          "max": 32,
+          "iqr": 0.0,
+          "mean": 32,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 32,
+          "min": 32,
+          "max": 32,
+          "iqr": 0.0,
+          "mean": 32,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 34,
+          "min": 34,
+          "max": 34,
+          "iqr": 0.0,
+          "mean": 34,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 2,
+          "min": 2,
+          "max": 2,
+          "iqr": 0.0,
+          "mean": 2,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": 475.272,
+          "min": 450.658,
+          "max": 502.51,
+          "iqr": 37.398000000000025,
+          "mean": 475.0852,
+          "stdev": 22.656224601640936
+        },
+        "reassignment_observed_ms": {
+          "median": 3959.41,
+          "min": 3947.55,
+          "max": 3999.65,
+          "iqr": 9.409999999999854,
+          "mean": 3964.516,
+          "stdev": 20.48106637848721
+        },
+        "recovery_observed_ms": {
+          "median": 4216.04,
+          "min": 4206.21,
+          "max": 4259.73,
+          "iqr": 6.380000000000109,
+          "mean": 4222.848,
+          "stdev": 21.178226318556383
+        }
+      }
+    },
+    {
+      "case_id": "failure/round-robin/remote/failure/2-2",
+      "scenario": "failure",
+      "mode": "remote",
+      "workload": "failure",
+      "capacities": [
+        2,
+        2
+      ],
+      "slots": 4,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 32,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 7.55148,
+          "min": 7.43683,
+          "max": 7.56553,
+          "iqr": 0.055919999999999526,
+          "mean": 7.521272,
+          "stdev": 0.05388652122748326
+        },
+        "elapsed_s": {
+          "median": 4.23758,
+          "min": 4.22971,
+          "max": 4.30291,
+          "iqr": 0.03160000000000007,
+          "mean": 4.254776,
+          "stdev": 0.030648853649035458
+        },
+        "p50_ms": {
+          "median": 2111.85,
+          "min": 2103.51,
+          "max": 2135.37,
+          "iqr": 2.2100000000000364,
+          "mean": 2114.768,
+          "stdev": 12.070506203138223
+        },
+        "p95_ms": {
+          "median": 4214.03,
+          "min": 4183.66,
+          "max": 4239.53,
+          "iqr": 21.48999999999978,
+          "mean": 4213.278,
+          "stdev": 21.220776847231527
+        },
+        "p99_ms": {
+          "median": 4226.3,
+          "min": 4215.83,
+          "max": 4291.32,
+          "iqr": 32.55000000000018,
+          "mean": 4242.592,
+          "stdev": 31.232596273764926
+        },
+        "queue_p99_ms": {
+          "median": 3694.39,
+          "min": 3690.13,
+          "max": 3761.51,
+          "iqr": 24.190000000000055,
+          "mean": 3710.572,
+          "stdev": 30.287933570978467
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000833,
+          "min": 0.000459,
+          "max": 0.006416,
+          "iqr": 0.00016700000000000005,
+          "mean": 0.0018586,
+          "stdev": 0.0025528275108201103
+        },
+        "slot_utilization": {
+          "median": 0.483814,
+          "min": 0.478222,
+          "max": 0.485669,
+          "iqr": 0.0013029999999999986,
+          "mean": 0.4829432,
+          "stdev": 0.002826626735173939
+        },
+        "accepted": {
+          "median": 32,
+          "min": 32,
+          "max": 32,
+          "iqr": 0.0,
+          "mean": 32,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 32,
+          "min": 32,
+          "max": 32,
+          "iqr": 0.0,
+          "mean": 32,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 34,
+          "min": 34,
+          "max": 34,
+          "iqr": 0.0,
+          "mean": 34,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 2,
+          "min": 2,
+          "max": 2,
+          "iqr": 0.0,
+          "mean": 2,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": 489.862,
+          "min": 470.569,
+          "max": 503.834,
+          "iqr": 10.548000000000002,
+          "mean": 490.721,
+          "stdev": 12.899720035721701
+        },
+        "reassignment_observed_ms": {
+          "median": 3959.92,
+          "min": 3941.55,
+          "max": 3988.14,
+          "iqr": 5.929999999999836,
+          "mean": 3961.952,
+          "stdev": 16.81376430190444
+        },
+        "recovery_observed_ms": {
+          "median": 4218.97,
+          "min": 4199.39,
+          "max": 4246.9,
+          "iqr": 7.940000000000509,
+          "mean": 4220.036,
+          "stdev": 17.276150612911213
+        }
+      }
+    },
+    {
+      "case_id": "heterogeneous/least-loaded/remote/mixed/1-2-4",
+      "scenario": "heterogeneous",
+      "mode": "remote",
+      "workload": "mixed",
+      "capacities": [
+        1,
+        2,
+        4
+      ],
+      "slots": 7,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 328.637,
+          "min": 326.694,
+          "max": 333.626,
+          "iqr": 3.8240000000000123,
+          "mean": 329.6082,
+          "stdev": 2.867872068276397
+        },
+        "elapsed_s": {
+          "median": 1.21715,
+          "min": 1.19895,
+          "max": 1.22439,
+          "iqr": 0.014089999999999936,
+          "mean": 1.213636,
+          "stdev": 0.010524099961516922
+        },
+        "p50_ms": {
+          "median": 535.474,
+          "min": 528.944,
+          "max": 542.262,
+          "iqr": 2.7089999999999463,
+          "mean": 535.1502,
+          "stdev": 4.8379881355786605
+        },
+        "p95_ms": {
+          "median": 1037.32,
+          "min": 1023.5,
+          "max": 1043.04,
+          "iqr": 10.210000000000036,
+          "mean": 1034.354,
+          "stdev": 7.976426518184685
+        },
+        "p99_ms": {
+          "median": 1080.29,
+          "min": 1075.52,
+          "max": 1096.81,
+          "iqr": 6.600000000000136,
+          "mean": 1082.864,
+          "stdev": 8.440129145931353
+        },
+        "queue_p99_ms": {
+          "median": 1065.73,
+          "min": 1052.44,
+          "max": 1083.6,
+          "iqr": 17.230000000000018,
+          "mean": 1066.72,
+          "stdev": 12.644815142974569
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000666,
+          "min": 0.000542,
+          "max": 0.000875,
+          "iqr": 9.999999999999159e-07,
+          "mean": 0.0006832,
+          "stdev": 0.00011997791463431928
+        },
+        "slot_utilization": {
+          "median": 0.547449,
+          "min": 0.544746,
+          "max": 0.559947,
+          "iqr": 0.009689000000000059,
+          "mean": 0.5510862,
+          "stdev": 0.006698934519757618
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "heterogeneous/least-loaded/remote/tiny/1-2-4",
+      "scenario": "heterogeneous",
+      "mode": "remote",
+      "workload": "tiny",
+      "capacities": [
+        1,
+        2,
+        4
+      ],
+      "slots": 7,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 3017.37,
+          "min": 2983.77,
+          "max": 3220.99,
+          "iqr": 34.07999999999993,
+          "mean": 3055.582,
+          "stdev": 94.98860942239331
+        },
+        "elapsed_s": {
+          "median": 0.132566,
+          "min": 0.124185,
+          "max": 0.134059,
+          "iqr": 0.0014869999999999883,
+          "mean": 0.1310058,
+          "stdev": 0.003931331161324367
+        },
+        "p50_ms": {
+          "median": 10.4428,
+          "min": 5.92417,
+          "max": 10.9377,
+          "iqr": 0.7071799999999993,
+          "mean": 9.500138,
+          "stdev": 2.0437524874651527
+        },
+        "p95_ms": {
+          "median": 14.9851,
+          "min": 9.78671,
+          "max": 16.5048,
+          "iqr": 0.7403000000000013,
+          "mean": 14.219382,
+          "stdev": 2.58294325598144
+        },
+        "p99_ms": {
+          "median": 15.1383,
+          "min": 10.6511,
+          "max": 16.7203,
+          "iqr": 0.6806999999999999,
+          "mean": 14.5222,
+          "stdev": 2.2905694204716873
+        },
+        "queue_p99_ms": {
+          "median": 14.855,
+          "min": 10.3392,
+          "max": 16.4208,
+          "iqr": 0.7067000000000014,
+          "mean": 14.23366,
+          "stdev": 2.3008613708783066
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000208,
+          "min": 0.000167,
+          "max": 0.000292,
+          "iqr": 4.200000000000002e-05,
+          "mean": 0.000225,
+          "stdev": 4.758150901348128e-05
+        },
+        "slot_utilization": {
+          "median": 0.000145377,
+          "min": 0.000129079,
+          "max": 0.000185198,
+          "iqr": 1.0042999999999999e-05,
+          "mean": 0.0001493518,
+          "stdev": 2.1385919402728516e-05
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "heterogeneous/least-loaded/remote/uniform/1-2-4",
+      "scenario": "heterogeneous",
+      "mode": "remote",
+      "workload": "uniform",
+      "capacities": [
+        1,
+        2,
+        4
+      ],
+      "slots": 7,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 432.428,
+          "min": 423.964,
+          "max": 441.299,
+          "iqr": 9.201000000000022,
+          "mean": 432.2776,
+          "stdev": 6.950210018409512
+        },
+        "elapsed_s": {
+          "median": 0.925009,
+          "min": 0.906416,
+          "max": 0.943477,
+          "iqr": 0.019736999999999894,
+          "mean": 0.9255226,
+          "stdev": 0.014864794458720227
+        },
+        "p50_ms": {
+          "median": 410.52,
+          "min": 395.458,
+          "max": 421.046,
+          "iqr": 4.4010000000000105,
+          "mean": 409.765,
+          "stdev": 9.28418488613835
+        },
+        "p95_ms": {
+          "median": 801.008,
+          "min": 793.955,
+          "max": 817.877,
+          "iqr": 19.132999999999925,
+          "mean": 805.067,
+          "stdev": 11.066516276588537
+        },
+        "p99_ms": {
+          "median": 835.342,
+          "min": 825.694,
+          "max": 853.693,
+          "iqr": 19.594999999999914,
+          "mean": 838.11,
+          "stdev": 12.213828044474825
+        },
+        "queue_p99_ms": {
+          "median": 828.509,
+          "min": 817.828,
+          "max": 846.535,
+          "iqr": 20.557000000000016,
+          "mean": 830.899,
+          "stdev": 12.573365440485693
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000833,
+          "min": 0.000625,
+          "max": 0.000958,
+          "iqr": 0.0002509999999999999,
+          "mean": 0.0007998,
+          "stdev": 0.00014859576037020705
+        },
+        "slot_utilization": {
+          "median": 0.410405,
+          "min": 0.404335,
+          "max": 0.420685,
+          "iqr": 0.0011260000000000159,
+          "mean": 0.4113654,
+          "stdev": 0.005888986101189225
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "heterogeneous/round-robin/remote/mixed/1-2-4",
+      "scenario": "heterogeneous",
+      "mode": "remote",
+      "workload": "mixed",
+      "capacities": [
+        1,
+        2,
+        4
+      ],
+      "slots": 7,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 329.009,
+          "min": 326.866,
+          "max": 338.184,
+          "iqr": 0.59699999999998,
+          "mean": 330.4424,
+          "stdev": 4.435290666912384
+        },
+        "elapsed_s": {
+          "median": 1.21577,
+          "min": 1.18279,
+          "max": 1.22374,
+          "iqr": 0.0022100000000000453,
+          "mean": 1.2106700000000001,
+          "stdev": 0.015997760780809316
+        },
+        "p50_ms": {
+          "median": 531.47,
+          "min": 518.71,
+          "max": 538.491,
+          "iqr": 8.871999999999957,
+          "mean": 530.539,
+          "stdev": 7.869592683233336
+        },
+        "p95_ms": {
+          "median": 1038.05,
+          "min": 1018.76,
+          "max": 1045.64,
+          "iqr": 7.740000000000009,
+          "mean": 1035.47,
+          "stdev": 10.333247311469924
+        },
+        "p99_ms": {
+          "median": 1086.59,
+          "min": 1057.61,
+          "max": 1091.66,
+          "iqr": 16.029999999999973,
+          "mean": 1079.998,
+          "stdev": 14.297768007629761
+        },
+        "queue_p99_ms": {
+          "median": 1069.32,
+          "min": 1039.67,
+          "max": 1080.86,
+          "iqr": 6.930000000000064,
+          "mean": 1065.98,
+          "stdev": 15.664630541445854
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000458,
+          "min": 0.000458,
+          "max": 0.000709,
+          "iqr": 4.199999999999999e-05,
+          "mean": 0.0005166,
+          "stdev": 0.0001090816208167077
+        },
+        "slot_utilization": {
+          "median": 0.551821,
+          "min": 0.543116,
+          "max": 0.559245,
+          "iqr": 0.008592999999999962,
+          "mean": 0.5510338,
+          "stdev": 0.006485343452740163
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "heterogeneous/round-robin/remote/tiny/1-2-4",
+      "scenario": "heterogeneous",
+      "mode": "remote",
+      "workload": "tiny",
+      "capacities": [
+        1,
+        2,
+        4
+      ],
+      "slots": 7,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 3005.32,
+          "min": 2987.59,
+          "max": 3046.64,
+          "iqr": 15.599999999999909,
+          "mean": 3009.486,
+          "stdev": 22.695849400275733
+        },
+        "elapsed_s": {
+          "median": 0.133097,
+          "min": 0.131292,
+          "max": 0.133887,
+          "iqr": 0.0006910000000000249,
+          "mean": 0.132919,
+          "stdev": 0.0009962753133547038
+        },
+        "p50_ms": {
+          "median": 9.10446,
+          "min": 7.1385,
+          "max": 11.1342,
+          "iqr": 0.97133,
+          "mean": 9.168213999999999,
+          "stdev": 1.4550576673383087
+        },
+        "p95_ms": {
+          "median": 13.8593,
+          "min": 11.9083,
+          "max": 16.0388,
+          "iqr": 1.802200000000001,
+          "mean": 14.18732,
+          "stdev": 1.6308667440965243
+        },
+        "p99_ms": {
+          "median": 14.1742,
+          "min": 12.3133,
+          "max": 16.2028,
+          "iqr": 1.7301000000000002,
+          "mean": 14.49084,
+          "stdev": 1.547199522686069
+        },
+        "queue_p99_ms": {
+          "median": 13.8955,
+          "min": 12.044,
+          "max": 15.9157,
+          "iqr": 1.7301000000000002,
+          "mean": 14.20454,
+          "stdev": 1.5391337508481837
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000166,
+          "min": 0.000125,
+          "max": 0.000292,
+          "iqr": 4.3000000000000015e-05,
+          "mean": 0.0001916,
+          "stdev": 6.350039369956694e-05
+        },
+        "slot_utilization": {
+          "median": 0.000145225,
+          "min": 0.000142422,
+          "max": 0.000149461,
+          "iqr": 5.225999999999994e-06,
+          "mean": 0.0001457164,
+          "stdev": 3.1133969069169438e-06
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "heterogeneous/round-robin/remote/uniform/1-2-4",
+      "scenario": "heterogeneous",
+      "mode": "remote",
+      "workload": "uniform",
+      "capacities": [
+        1,
+        2,
+        4
+      ],
+      "slots": 7,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 435.636,
+          "min": 428.046,
+          "max": 442.567,
+          "iqr": 6.579999999999984,
+          "mean": 435.18580000000003,
+          "stdev": 5.646877296347073
+        },
+        "elapsed_s": {
+          "median": 0.918197,
+          "min": 0.903818,
+          "max": 0.934479,
+          "iqr": 0.013920000000000043,
+          "mean": 0.9192712,
+          "stdev": 0.011926717368999723
+        },
+        "p50_ms": {
+          "median": 399.395,
+          "min": 384.92,
+          "max": 413.405,
+          "iqr": 20.355000000000018,
+          "mean": 399.1526,
+          "stdev": 12.378953441224334
+        },
+        "p95_ms": {
+          "median": 798.162,
+          "min": 780.742,
+          "max": 820.206,
+          "iqr": 9.133000000000038,
+          "mean": 799.5742,
+          "stdev": 14.353554618978555
+        },
+        "p99_ms": {
+          "median": 827.052,
+          "min": 814.852,
+          "max": 849.422,
+          "iqr": 14.940000000000055,
+          "mean": 830.9884,
+          "stdev": 13.496495352498018
+        },
+        "queue_p99_ms": {
+          "median": 818.835,
+          "min": 808.072,
+          "max": 842.318,
+          "iqr": 13.677000000000021,
+          "mean": 823.8868,
+          "stdev": 13.340103698997238
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000417,
+          "min": 0.000375,
+          "max": 0.000583,
+          "iqr": 4.199999999999999e-05,
+          "mean": 0.0004502,
+          "stdev": 7.995748870493619e-05
+        },
+        "slot_utilization": {
+          "median": 0.410999,
+          "min": 0.406797,
+          "max": 0.420782,
+          "iqr": 0.003020999999999996,
+          "mean": 0.4124342,
+          "stdev": 0.005217761272806557
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "local-work/least-loaded/local/mixed/none",
+      "scenario": "local-work",
+      "mode": "local",
+      "workload": "mixed",
+      "capacities": [],
+      "slots": 4,
+      "policy": "least-loaded",
+      "latency_scope": "client",
+      "pattern": "serial",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 84.4517,
+          "min": 83.9434,
+          "max": 85.1041,
+          "iqr": 0.9298999999999893,
+          "mean": 84.47714,
+          "stdev": 0.5275553269563289
+        },
+        "elapsed_s": {
+          "median": 4.73644,
+          "min": 4.70012,
+          "max": 4.76512,
+          "iqr": 0.05217000000000027,
+          "mean": 4.735158,
+          "stdev": 0.02955959269002189
+        },
+        "p50_ms": {
+          "median": 7.26617,
+          "min": 7.06408,
+          "max": 7.51392,
+          "iqr": 0.30062000000000033,
+          "mean": 7.312942,
+          "stdev": 0.1963276234257422
+        },
+        "p95_ms": {
+          "median": 7.56146,
+          "min": 7.544,
+          "max": 7.58117,
+          "iqr": 0.019289999999999807,
+          "mean": 7.564636,
+          "stdev": 0.015180919932599731
+        },
+        "p99_ms": {
+          "median": 109.732,
+          "min": 108.654,
+          "max": 109.905,
+          "iqr": 0.6949999999999932,
+          "mean": 109.46039999999999,
+          "stdev": 0.5402076452624494
+        },
+        "queue_p99_ms": {
+          "median": 0.000959,
+          "min": 0.000875,
+          "max": 0.00125,
+          "iqr": 8.300000000000007e-05,
+          "mean": 0.0010002,
+          "stdev": 0.0001472199035456823
+        },
+        "scheduling_p99_ms": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "iqr": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0
+        },
+        "slot_utilization": {
+          "median": 0.999925,
+          "min": 0.99992,
+          "max": 0.999931,
+          "iqr": 5.999999999950489e-06,
+          "mean": 0.9999244,
+          "stdev": 4.615192303672906e-06
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "local-work/least-loaded/local/uniform/none",
+      "scenario": "local-work",
+      "mode": "local",
+      "workload": "uniform",
+      "capacities": [],
+      "slots": 4,
+      "policy": "least-loaded",
+      "latency_scope": "client",
+      "pattern": "serial",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 147.078,
+          "min": 144.307,
+          "max": 147.665,
+          "iqr": 0.31399999999999295,
+          "mean": 146.6272,
+          "stdev": 1.3284064513544063
+        },
+        "elapsed_s": {
+          "median": 2.71964,
+          "min": 2.70884,
+          "max": 2.77186,
+          "iqr": 0.005809999999999871,
+          "mean": 2.72819,
+          "stdev": 0.02497908324979132
+        },
+        "p50_ms": {
+          "median": 7.09883,
+          "min": 7.01129,
+          "max": 7.50904,
+          "iqr": 0.10165999999999986,
+          "mean": 7.170832,
+          "stdev": 0.19740730184063593
+        },
+        "p95_ms": {
+          "median": 7.52783,
+          "min": 7.52592,
+          "max": 7.52858,
+          "iqr": 0.0015899999999993142,
+          "mean": 7.527516,
+          "stdev": 0.001125357720904546
+        },
+        "p99_ms": {
+          "median": 7.53562,
+          "min": 7.53121,
+          "max": 7.54608,
+          "iqr": 0.004290000000000127,
+          "mean": 7.536108,
+          "stdev": 0.005987217216704267
+        },
+        "queue_p99_ms": {
+          "median": 0.00075,
+          "min": 0.000584,
+          "max": 0.00075,
+          "iqr": 0.00016600000000000002,
+          "mean": 0.0006836,
+          "stdev": 9.092194454585759e-05
+        },
+        "scheduling_p99_ms": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "iqr": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0
+        },
+        "slot_utilization": {
+          "median": 0.999897,
+          "min": 0.999868,
+          "max": 0.999909,
+          "iqr": 8.000000000008e-06,
+          "mean": 0.999894,
+          "stdev": 1.560448653434373e-05
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "local-work/least-loaded/thread-pool/mixed/none",
+      "scenario": "local-work",
+      "mode": "thread-pool",
+      "workload": "mixed",
+      "capacities": [],
+      "slots": 4,
+      "policy": "least-loaded",
+      "latency_scope": "client",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 329.66,
+          "min": 327.967,
+          "max": 331.733,
+          "iqr": 1.9389999999999645,
+          "mean": 329.493,
+          "stdev": 1.5525870345974158
+        },
+        "elapsed_s": {
+          "median": 1.21337,
+          "min": 1.20579,
+          "max": 1.21964,
+          "iqr": 0.007160000000000055,
+          "mean": 1.214008,
+          "stdev": 0.005711652125261187
+        },
+        "p50_ms": {
+          "median": 587.48,
+          "min": 583.037,
+          "max": 590.529,
+          "iqr": 4.469000000000051,
+          "mean": 586.9666,
+          "stdev": 3.098092041886423
+        },
+        "p95_ms": {
+          "median": 1118.32,
+          "min": 1110.03,
+          "max": 1122.79,
+          "iqr": 7.629999999999882,
+          "mean": 1116.846,
+          "stdev": 5.320980172862865
+        },
+        "p99_ms": {
+          "median": 1166.29,
+          "min": 1157.89,
+          "max": 1172.82,
+          "iqr": 5.029999999999973,
+          "mean": 1165.686,
+          "stdev": 5.583200694941866
+        },
+        "queue_p99_ms": {
+          "median": 1156.31,
+          "min": 1147.6,
+          "max": 1161.06,
+          "iqr": 6.420000000000073,
+          "mean": 1155.498,
+          "stdev": 5.379197895597474
+        },
+        "scheduling_p99_ms": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "iqr": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0
+        },
+        "slot_utilization": {
+          "median": 0.973527,
+          "min": 0.971123,
+          "max": 0.974689,
+          "iqr": 0.0019099999999999673,
+          "mean": 0.973035,
+          "stdev": 0.0014564470467545512
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "local-work/least-loaded/thread-pool/uniform/none",
+      "scenario": "local-work",
+      "mode": "thread-pool",
+      "workload": "uniform",
+      "capacities": [],
+      "slots": 4,
+      "policy": "least-loaded",
+      "latency_scope": "client",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 585.376,
+          "min": 577.193,
+          "max": 588.226,
+          "iqr": 3.783999999999992,
+          "mean": 584.507,
+          "stdev": 4.4428477354057465
+        },
+        "elapsed_s": {
+          "median": 0.683321,
+          "min": 0.68001,
+          "max": 0.693009,
+          "iqr": 0.004408999999999996,
+          "mean": 0.684369,
+          "stdev": 0.005236758778099282
+        },
+        "p50_ms": {
+          "median": 342.482,
+          "min": 338.84,
+          "max": 348.265,
+          "iqr": 4.045999999999992,
+          "mean": 343.3406,
+          "stdev": 3.6579329272144956
+        },
+        "p95_ms": {
+          "median": 648.624,
+          "min": 646.391,
+          "max": 655.478,
+          "iqr": 0.9239999999999782,
+          "mean": 649.373,
+          "stdev": 3.5344439449508678
+        },
+        "p99_ms": {
+          "median": 676.127,
+          "min": 672.928,
+          "max": 685.371,
+          "iqr": 3.8950000000000955,
+          "mean": 677.0286,
+          "stdev": 5.009676167178878
+        },
+        "queue_p99_ms": {
+          "median": 669.787,
+          "min": 667.158,
+          "max": 677.85,
+          "iqr": 2.756999999999948,
+          "mean": 670.4616,
+          "stdev": 4.346624241868623
+        },
+        "scheduling_p99_ms": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "iqr": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0
+        },
+        "slot_utilization": {
+          "median": 0.994725,
+          "min": 0.993628,
+          "max": 0.995372,
+          "iqr": 0.0007909999999999862,
+          "mean": 0.9946164,
+          "stdev": 0.0006856043319583328
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "overhead/least-loaded/local/tiny/none",
+      "scenario": "overhead",
+      "mode": "local",
+      "workload": "tiny",
+      "capacities": [],
+      "slots": 4,
+      "policy": "least-loaded",
+      "latency_scope": "client",
+      "pattern": "serial",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 11098200.0,
+          "min": 10631200.0,
+          "max": 11985000.0,
+          "iqr": 389400.0,
+          "mean": 11135400.0,
+          "stdev": 524578.7452804393
+        },
+        "elapsed_s": {
+          "median": 3.6042e-05,
+          "min": 3.3375e-05,
+          "max": 3.7625e-05,
+          "iqr": 1.2920000000000005e-06,
+          "mean": 3.59832e-05,
+          "stdev": 1.6392203024608989e-06
+        },
+        "p50_ms": {
+          "median": 8.3e-05,
+          "min": 4.2e-05,
+          "max": 8.3e-05,
+          "iqr": 0.0,
+          "mean": 7.48e-05,
+          "stdev": 1.8335757415498277e-05
+        },
+        "p95_ms": {
+          "median": 8.4e-05,
+          "min": 8.4e-05,
+          "max": 8.4e-05,
+          "iqr": 0.0,
+          "mean": 8.4e-05,
+          "stdev": 0.0
+        },
+        "p99_ms": {
+          "median": 8.4e-05,
+          "min": 8.4e-05,
+          "max": 8.4e-05,
+          "iqr": 0.0,
+          "mean": 8.4e-05,
+          "stdev": 0.0
+        },
+        "queue_p99_ms": {
+          "median": 4.2e-05,
+          "min": 4.2e-05,
+          "max": 4.2e-05,
+          "iqr": 0.0,
+          "mean": 4.2e-05,
+          "stdev": 0.0
+        },
+        "scheduling_p99_ms": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "iqr": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0
+        },
+        "slot_utilization": {
+          "median": 0.297019,
+          "min": 0.279832,
+          "max": 0.319044,
+          "iqr": 0.02431500000000003,
+          "mean": 0.3014428,
+          "stdev": 0.016789651982694578
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "overhead/least-loaded/remote/tiny/2-2",
+      "scenario": "overhead",
+      "mode": "remote",
+      "workload": "tiny",
+      "capacities": [
+        2,
+        2
+      ],
+      "slots": 4,
+      "policy": "least-loaded",
+      "latency_scope": "client",
+      "pattern": "serial",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 71.0516,
+          "min": 70.8555,
+          "max": 71.7356,
+          "iqr": 0.1080999999999932,
+          "mean": 71.13136,
+          "stdev": 0.34796376679189
+        },
+        "elapsed_s": {
+          "median": 5.62972,
+          "min": 5.57603,
+          "max": 5.64529,
+          "iqr": 0.008569999999999744,
+          "mean": 5.623506,
+          "stdev": 0.027356652390232158
+        },
+        "p50_ms": {
+          "median": 14.3057,
+          "min": 14.263,
+          "max": 14.3755,
+          "iqr": 0.042299999999999116,
+          "mean": 14.31118,
+          "stdev": 0.04312733471940981
+        },
+        "p95_ms": {
+          "median": 15.875,
+          "min": 15.8555,
+          "max": 15.9599,
+          "iqr": 0.05439999999999934,
+          "mean": 15.89288,
+          "stdev": 0.04403824474249609
+        },
+        "p99_ms": {
+          "median": 16.0871,
+          "min": 16.0759,
+          "max": 16.6208,
+          "iqr": 0.044299999999999784,
+          "mean": 16.19958,
+          "stdev": 0.23636815986930157
+        },
+        "queue_p99_ms": {
+          "median": 14.6806,
+          "min": 14.6559,
+          "max": 14.735,
+          "iqr": 0.059800000000000963,
+          "mean": 14.69102,
+          "stdev": 0.035586050637855096
+        },
+        "scheduling_p99_ms": {
+          "median": 0.001209,
+          "min": 0.001084,
+          "max": 0.003083,
+          "iqr": 8.299999999999996e-05,
+          "mean": 0.0015586,
+          "stdev": 0.0008543777267696062
+        },
+        "slot_utilization": {
+          "median": 2.34496e-05,
+          "min": 2.16021e-05,
+          "max": 2.38147e-05,
+          "iqr": 1.5468000000000002e-06,
+          "mean": 2.2879040000000002e-05,
+          "stdev": 1.0067464790104805e-06
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "overhead/least-loaded/rpc/tiny/none",
+      "scenario": "overhead",
+      "mode": "rpc",
+      "workload": "tiny",
+      "capacities": [],
+      "slots": 4,
+      "policy": "least-loaded",
+      "latency_scope": "client",
+      "pattern": "serial",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 7274.44,
+          "min": 7211.93,
+          "max": 7458.56,
+          "iqr": 65.43000000000029,
+          "mean": 7307.156,
+          "stdev": 94.17705946779198
+        },
+        "elapsed_s": {
+          "median": 0.0549871,
+          "min": 0.0536296,
+          "max": 0.0554636,
+          "iqr": 0.0004916999999999977,
+          "mean": 0.05474804,
+          "stdev": 0.0006989969191634541
+        },
+        "p50_ms": {
+          "median": 0.119209,
+          "min": 0.117583,
+          "max": 0.120791,
+          "iqr": 0.0013750000000000012,
+          "mean": 0.11937479999999999,
+          "stdev": 0.0012585238178119643
+        },
+        "p95_ms": {
+          "median": 0.206,
+          "min": 0.176375,
+          "max": 0.212917,
+          "iqr": 0.001583000000000001,
+          "mean": 0.20114179999999998,
+          "stdev": 0.014230081401734842
+        },
+        "p99_ms": {
+          "median": 0.233667,
+          "min": 0.191042,
+          "max": 0.23575,
+          "iqr": 0.0017500000000000016,
+          "mean": 0.2253418,
+          "stdev": 0.01921460067760973
+        },
+        "queue_p99_ms": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "iqr": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0
+        },
+        "scheduling_p99_ms": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "iqr": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0
+        },
+        "slot_utilization": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "iqr": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "overhead/least-loaded/thread-pool/tiny/none",
+      "scenario": "overhead",
+      "mode": "thread-pool",
+      "workload": "tiny",
+      "capacities": [],
+      "slots": 4,
+      "policy": "least-loaded",
+      "latency_scope": "client",
+      "pattern": "serial",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 215716.0,
+          "min": 198585.0,
+          "max": 218799.0,
+          "iqr": 15641.0,
+          "mean": 210873.8,
+          "stdev": 9482.94878716531
+        },
+        "elapsed_s": {
+          "median": 0.00185429,
+          "min": 0.00182817,
+          "max": 0.00201425,
+          "iqr": 0.00014121000000000012,
+          "mean": 0.0019,
+          "stdev": 8.700224077574096e-05
+        },
+        "p50_ms": {
+          "median": 0.004084,
+          "min": 0.004,
+          "max": 0.004583,
+          "iqr": 0.0003759999999999996,
+          "mean": 0.0042250000000000005,
+          "stdev": 0.00025951396879551593
+        },
+        "p95_ms": {
+          "median": 0.007,
+          "min": 0.006708,
+          "max": 0.007083,
+          "iqr": 4.200000000000037e-05,
+          "mean": 0.0069498,
+          "stdev": 0.0001425805035760498
+        },
+        "p99_ms": {
+          "median": 0.007959,
+          "min": 0.007542,
+          "max": 0.008792,
+          "iqr": 0.00037500000000000033,
+          "mean": 0.0081168,
+          "stdev": 0.0004698805167273908
+        },
+        "queue_p99_ms": {
+          "median": 0.003834,
+          "min": 0.003667,
+          "max": 0.004084,
+          "iqr": 0.0002500000000000002,
+          "mean": 0.0038338,
+          "stdev": 0.00017689460138737979
+        },
+        "scheduling_p99_ms": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "iqr": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0
+        },
+        "slot_utilization": {
+          "median": 0.00357652,
+          "min": 0.00342305,
+          "max": 0.00384634,
+          "iqr": 0.00025660000000000006,
+          "mean": 0.003646978,
+          "stdev": 0.00018185835578823432
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "overload/least-loaded/remote/failure/2",
+      "scenario": "overload",
+      "mode": "remote",
+      "workload": "failure",
+      "capacities": [
+        2
+      ],
+      "slots": 2,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 7.56982,
+          "min": 7.42013,
+          "max": 7.61239,
+          "iqr": 0.050090000000000856,
+          "mean": 7.5470820000000005,
+          "stdev": 0.07568075098728873
+        },
+        "elapsed_s": {
+          "median": 1.05683,
+          "min": 1.05092,
+          "max": 1.07815,
+          "iqr": 0.006999999999999895,
+          "mean": 1.0601,
+          "stdev": 0.010734847460490485
+        },
+        "p50_ms": {
+          "median": 528.718,
+          "min": 523.907,
+          "max": 538.174,
+          "iqr": 11.010000000000105,
+          "mean": 531.153,
+          "stdev": 6.555074980501758
+        },
+        "p95_ms": {
+          "median": 1051.66,
+          "min": 1046.54,
+          "max": 1075.49,
+          "iqr": 8.509999999999991,
+          "mean": 1056.228,
+          "stdev": 11.559505612265605
+        },
+        "p99_ms": {
+          "median": 1051.66,
+          "min": 1046.54,
+          "max": 1075.49,
+          "iqr": 8.509999999999991,
+          "mean": 1056.228,
+          "stdev": 11.559505612265605
+        },
+        "queue_p99_ms": {
+          "median": 794.443,
+          "min": 788.929,
+          "max": 820.292,
+          "iqr": 8.964000000000055,
+          "mean": 799.3336,
+          "stdev": 12.526379816211888
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000666,
+          "min": 0.000583,
+          "max": 0.000875,
+          "iqr": 8.299999999999996e-05,
+          "mean": 0.000675,
+          "stdev": 0.00011925812341304052
+        },
+        "slot_utilization": {
+          "median": 0.972193,
+          "min": 0.958601,
+          "max": 0.975394,
+          "iqr": 0.007762000000000047,
+          "mean": 0.9691872,
+          "stdev": 0.006904609706565594
+        },
+        "accepted": {
+          "median": 8,
+          "min": 8,
+          "max": 8,
+          "iqr": 0.0,
+          "mean": 8,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 392,
+          "min": 392,
+          "max": 392,
+          "iqr": 0.0,
+          "mean": 392,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 8,
+          "min": 8,
+          "max": 8,
+          "iqr": 0.0,
+          "mean": 8,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 8,
+          "min": 8,
+          "max": 8,
+          "iqr": 0.0,
+          "mean": 8,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "overload/round-robin/remote/failure/2",
+      "scenario": "overload",
+      "mode": "remote",
+      "workload": "failure",
+      "capacities": [
+        2
+      ],
+      "slots": 2,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 7.54854,
+          "min": 7.44059,
+          "max": 7.57117,
+          "iqr": 0.02120999999999995,
+          "mean": 7.529458,
+          "stdev": 0.051528006656574615
+        },
+        "elapsed_s": {
+          "median": 1.05981,
+          "min": 1.05664,
+          "max": 1.07518,
+          "iqr": 0.0029799999999999827,
+          "mean": 1.0625339999999999,
+          "stdev": 0.007325184639311174
+        },
+        "p50_ms": {
+          "median": 529.091,
+          "min": 522.142,
+          "max": 534.771,
+          "iqr": 6.696000000000026,
+          "mean": 529.688,
+          "stdev": 5.249652893287304
+        },
+        "p95_ms": {
+          "median": 1055.69,
+          "min": 1052.31,
+          "max": 1072.83,
+          "iqr": 3.269999999999982,
+          "mean": 1058.82,
+          "stdev": 8.114061868139753
+        },
+        "p99_ms": {
+          "median": 1055.69,
+          "min": 1052.31,
+          "max": 1072.83,
+          "iqr": 3.269999999999982,
+          "mean": 1058.82,
+          "stdev": 8.114061868139753
+        },
+        "queue_p99_ms": {
+          "median": 798.128,
+          "min": 794.195,
+          "max": 815.03,
+          "iqr": 5.8559999999999945,
+          "mean": 801.3794,
+          "stdev": 8.228607464206776
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000625,
+          "min": 0.000459,
+          "max": 0.000958,
+          "iqr": 0.000291,
+          "mean": 0.0006666,
+          "stdev": 0.00020795023443122155
+        },
+        "slot_utilization": {
+          "median": 0.967414,
+          "min": 0.958744,
+          "max": 0.969234,
+          "iqr": 0.003134999999999999,
+          "mean": 0.965997,
+          "stdev": 0.004283210828338928
+        },
+        "accepted": {
+          "median": 8,
+          "min": 8,
+          "max": 8,
+          "iqr": 0.0,
+          "mean": 8,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 392,
+          "min": 392,
+          "max": 392,
+          "iqr": 0.0,
+          "mean": 392,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 8,
+          "min": 8,
+          "max": 8,
+          "iqr": 0.0,
+          "mean": 8,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 8,
+          "min": 8,
+          "max": 8,
+          "iqr": 0.0,
+          "mean": 8,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/least-loaded/remote/mixed/2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "mixed",
+      "capacities": [
+        2
+      ],
+      "slots": 2,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 103.803,
+          "min": 101.375,
+          "max": 104.508,
+          "iqr": 0.6039999999999992,
+          "mean": 103.5604,
+          "stdev": 1.2659377156874652
+        },
+        "elapsed_s": {
+          "median": 3.85345,
+          "min": 3.82746,
+          "max": 3.94575,
+          "iqr": 0.022310000000000052,
+          "mean": 3.862946,
+          "stdev": 0.04788019559275003
+        },
+        "p50_ms": {
+          "median": 1882.51,
+          "min": 1850.38,
+          "max": 1966.9,
+          "iqr": 19.27000000000021,
+          "mean": 1891.06,
+          "stdev": 44.77550390559555
+        },
+        "p95_ms": {
+          "median": 3582.12,
+          "min": 3568.54,
+          "max": 3683.1,
+          "iqr": 25.65000000000009,
+          "mean": 3600.134,
+          "stdev": 47.67436816571349
+        },
+        "p99_ms": {
+          "median": 3755.9,
+          "min": 3723.3,
+          "max": 3843.81,
+          "iqr": 28.659999999999854,
+          "mean": 3762.486,
+          "stdev": 48.04992486986834
+        },
+        "queue_p99_ms": {
+          "median": 3748.25,
+          "min": 3715.6,
+          "max": 3835.44,
+          "iqr": 26.86999999999989,
+          "mean": 3754.9,
+          "stdev": 47.52535270779169
+        },
+        "scheduling_p99_ms": {
+          "median": 0.001,
+          "min": 0.000709,
+          "max": 0.001333,
+          "iqr": 0.00016600000000000002,
+          "mean": 0.0009752,
+          "stdev": 0.0002345478629192771
+        },
+        "slot_utilization": {
+          "median": 0.61173,
+          "min": 0.59633,
+          "max": 0.615809,
+          "iqr": 0.010155000000000025,
+          "mean": 0.6077012,
+          "stdev": 0.008110591390274823
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/least-loaded/remote/mixed/2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "mixed",
+      "capacities": [
+        2,
+        2
+      ],
+      "slots": 4,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 201.691,
+          "min": 199.172,
+          "max": 203.169,
+          "iqr": 2.078000000000003,
+          "mean": 201.2504,
+          "stdev": 1.6119372816583206
+        },
+        "elapsed_s": {
+          "median": 1.98323,
+          "min": 1.9688,
+          "max": 2.00832,
+          "iqr": 0.020550000000000068,
+          "mean": 1.987676,
+          "stdev": 0.015945078551076443
+        },
+        "p50_ms": {
+          "median": 955.315,
+          "min": 940.998,
+          "max": 957.88,
+          "iqr": 11.394000000000005,
+          "mean": 950.8746,
+          "stdev": 7.6236936782638285
+        },
+        "p95_ms": {
+          "median": 1815.16,
+          "min": 1790.47,
+          "max": 1831.79,
+          "iqr": 18.809999999999945,
+          "mean": 1812.842,
+          "stdev": 16.143310379225174
+        },
+        "p99_ms": {
+          "median": 1888.57,
+          "min": 1867.05,
+          "max": 1910.29,
+          "iqr": 11.509999999999991,
+          "mean": 1888.352,
+          "stdev": 15.824848182526113
+        },
+        "queue_p99_ms": {
+          "median": 1873.83,
+          "min": 1849.49,
+          "max": 1902.54,
+          "iqr": 18.769999999999982,
+          "mean": 1875.33,
+          "stdev": 19.91547513869552
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000834,
+          "min": 0.000709,
+          "max": 0.001208,
+          "iqr": 0.0001240000000000001,
+          "mean": 0.0008918,
+          "stdev": 0.00019188850929641415
+        },
+        "slot_utilization": {
+          "median": 0.585569,
+          "min": 0.583748,
+          "max": 0.593109,
+          "iqr": 0.005531999999999981,
+          "mean": 0.587512,
+          "stdev": 0.004017988178180702
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/least-loaded/remote/mixed/2-2-2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "mixed",
+      "capacities": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "slots": 8,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 371.391,
+          "min": 366.744,
+          "max": 376.423,
+          "iqr": 8.209000000000003,
+          "mean": 371.64820000000003,
+          "stdev": 4.491230755594723
+        },
+        "elapsed_s": {
+          "median": 1.07703,
+          "min": 1.06263,
+          "max": 1.09068,
+          "iqr": 0.02375000000000016,
+          "mean": 1.07641,
+          "stdev": 0.013005316220684595
+        },
+        "p50_ms": {
+          "median": 455.625,
+          "min": 450.953,
+          "max": 471.546,
+          "iqr": 11.960000000000036,
+          "mean": 459.7844,
+          "stdev": 8.745080548514128
+        },
+        "p95_ms": {
+          "median": 897.398,
+          "min": 888.395,
+          "max": 909.023,
+          "iqr": 10.927000000000021,
+          "mean": 898.0226,
+          "stdev": 8.277517339154313
+        },
+        "p99_ms": {
+          "median": 940.273,
+          "min": 922.052,
+          "max": 950.214,
+          "iqr": 11.373000000000047,
+          "mean": 937.0888,
+          "stdev": 10.885743874444245
+        },
+        "queue_p99_ms": {
+          "median": 928.154,
+          "min": 913.424,
+          "max": 933.846,
+          "iqr": 9.427999999999997,
+          "mean": 925.7052,
+          "stdev": 8.20017479691745
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000708,
+          "min": 0.000667,
+          "max": 0.00075,
+          "iqr": 4.100000000000002e-05,
+          "mean": 0.0007,
+          "stdev": 3.466266002487406e-05
+        },
+        "slot_utilization": {
+          "median": 0.539467,
+          "min": 0.538694,
+          "max": 0.551701,
+          "iqr": 0.008996999999999922,
+          "mean": 0.543477,
+          "stdev": 0.0060668412291735255
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/least-loaded/remote/mixed/2-2-2-2-2-2-2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "mixed",
+      "capacities": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "slots": 16,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 662.428,
+          "min": 643.111,
+          "max": 666.442,
+          "iqr": 16.491999999999962,
+          "mean": 657.0078,
+          "stdev": 10.582477011550743
+        },
+        "elapsed_s": {
+          "median": 0.603839,
+          "min": 0.600202,
+          "max": 0.621976,
+          "iqr": 0.01530699999999996,
+          "mean": 0.6089476,
+          "stdev": 0.009871874406615978
+        },
+        "p50_ms": {
+          "median": 211.538,
+          "min": 209.975,
+          "max": 218.801,
+          "iqr": 1.8889999999999816,
+          "mean": 212.953,
+          "stdev": 3.4609422849853995
+        },
+        "p95_ms": {
+          "median": 434.457,
+          "min": 423.288,
+          "max": 444.489,
+          "iqr": 2.2269999999999754,
+          "mean": 433.9198,
+          "stdev": 7.543608731900124
+        },
+        "p99_ms": {
+          "median": 448.808,
+          "min": 436.9,
+          "max": 458.817,
+          "iqr": 6.0120000000000005,
+          "mean": 448.8466,
+          "stdev": 8.096811088323612
+        },
+        "queue_p99_ms": {
+          "median": 440.746,
+          "min": 429.36,
+          "max": 451.134,
+          "iqr": 5.56699999999995,
+          "mean": 440.8994,
+          "stdev": 7.976328090042431
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000209,
+          "min": 0.000167,
+          "max": 0.00025,
+          "iqr": 4.0999999999999994e-05,
+          "mean": 0.00021700000000000002,
+          "stdev": 3.466266002487403e-05
+        },
+        "slot_utilization": {
+          "median": 0.477691,
+          "min": 0.470156,
+          "max": 0.483477,
+          "iqr": 0.009735999999999967,
+          "mean": 0.4768644,
+          "stdev": 0.0058539358383911085
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/least-loaded/remote/tiny/2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "tiny",
+      "capacities": [
+        2
+      ],
+      "slots": 2,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 3038.0,
+          "min": 2983.99,
+          "max": 3056.47,
+          "iqr": 14.659999999999854,
+          "mean": 3031.436,
+          "stdev": 28.080008547007303
+        },
+        "elapsed_s": {
+          "median": 0.131665,
+          "min": 0.13087,
+          "max": 0.134049,
+          "iqr": 0.0006349999999999967,
+          "mean": 0.1319598,
+          "stdev": 0.0012338122628666047
+        },
+        "p50_ms": {
+          "median": 8.12217,
+          "min": 6.55858,
+          "max": 11.9656,
+          "iqr": 2.6605099999999995,
+          "mean": 8.964688,
+          "stdev": 2.183718329059405
+        },
+        "p95_ms": {
+          "median": 11.9916,
+          "min": 10.0768,
+          "max": 18.2277,
+          "iqr": 4.5929,
+          "mean": 13.64912,
+          "stdev": 3.436265143582491
+        },
+        "p99_ms": {
+          "median": 12.2758,
+          "min": 10.5937,
+          "max": 18.5433,
+          "iqr": 4.5281,
+          "mean": 13.9353,
+          "stdev": 3.37205439680323
+        },
+        "queue_p99_ms": {
+          "median": 12.02,
+          "min": 10.2828,
+          "max": 18.2583,
+          "iqr": 4.5495,
+          "mean": 13.64932,
+          "stdev": 3.3784109677480028
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000167,
+          "min": 0.000125,
+          "max": 0.00025,
+          "iqr": 8.299999999999998e-05,
+          "mean": 0.000175,
+          "stdev": 5.426324723051506e-05
+        },
+        "slot_utilization": {
+          "median": 0.0004776,
+          "min": 0.000379132,
+          "max": 0.000489878,
+          "iqr": 7.836099999999999e-05,
+          "mean": 0.0004452414,
+          "stdev": 5.133086620932867e-05
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/least-loaded/remote/tiny/2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "tiny",
+      "capacities": [
+        2,
+        2
+      ],
+      "slots": 4,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 3017.14,
+          "min": 2990.53,
+          "max": 3040.27,
+          "iqr": 17.659999999999854,
+          "mean": 3018.736,
+          "stdev": 19.052273617602598
+        },
+        "elapsed_s": {
+          "median": 0.132576,
+          "min": 0.131567,
+          "max": 0.133756,
+          "iqr": 0.0007729999999999959,
+          "mean": 0.13251,
+          "stdev": 0.0008385949558636834
+        },
+        "p50_ms": {
+          "median": 10.7897,
+          "min": 7.14863,
+          "max": 11.4901,
+          "iqr": 2.67394,
+          "mean": 9.922258,
+          "stdev": 1.906293021526334
+        },
+        "p95_ms": {
+          "median": 15.7882,
+          "min": 11.4553,
+          "max": 31.3267,
+          "iqr": 2.783100000000001,
+          "mean": 17.92374,
+          "stdev": 7.768984991811993
+        },
+        "p99_ms": {
+          "median": 16.002,
+          "min": 11.8163,
+          "max": 31.6438,
+          "iqr": 2.7642999999999986,
+          "mean": 18.20188,
+          "stdev": 7.776785909808756
+        },
+        "queue_p99_ms": {
+          "median": 15.7357,
+          "min": 11.544,
+          "max": 31.5128,
+          "iqr": 2.8049000000000017,
+          "mean": 17.94908,
+          "stdev": 7.843151970158425
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000167,
+          "min": 0.000125,
+          "max": 0.000292,
+          "iqr": 4.0999999999999994e-05,
+          "mean": 0.0001918,
+          "stdev": 6.323527496579738e-05
+        },
+        "slot_utilization": {
+          "median": 0.000246706,
+          "min": 0.000230379,
+          "max": 0.000280453,
+          "iqr": 3.5325000000000005e-05,
+          "mean": 0.0002525986,
+          "stdev": 2.1955990077880797e-05
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/least-loaded/remote/tiny/2-2-2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "tiny",
+      "capacities": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "slots": 8,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 3011.57,
+          "min": 2983.61,
+          "max": 3109.49,
+          "iqr": 66.05000000000018,
+          "mean": 3030.752,
+          "stdev": 52.555553655156075
+        },
+        "elapsed_s": {
+          "median": 0.132821,
+          "min": 0.128638,
+          "max": 0.134066,
+          "iqr": 0.0028880000000000017,
+          "mean": 0.13201179999999998,
+          "stdev": 0.002267024194842213
+        },
+        "p50_ms": {
+          "median": 8.15554,
+          "min": 6.84675,
+          "max": 11.7033,
+          "iqr": 3.2133700000000003,
+          "mean": 9.032244,
+          "stdev": 2.116536291522071
+        },
+        "p95_ms": {
+          "median": 13.3209,
+          "min": 10.2107,
+          "max": 16.773,
+          "iqr": 4.2494,
+          "mean": 13.75748,
+          "stdev": 2.8000298501980296
+        },
+        "p99_ms": {
+          "median": 13.451,
+          "min": 10.8498,
+          "max": 17.1495,
+          "iqr": 4.3458000000000006,
+          "mean": 14.13914,
+          "stdev": 2.7507367645778102
+        },
+        "queue_p99_ms": {
+          "median": 13.1665,
+          "min": 10.4925,
+          "max": 16.8972,
+          "iqr": 4.393899999999999,
+          "mean": 13.85766,
+          "stdev": 2.793336122452864
+        },
+        "scheduling_p99_ms": {
+          "median": 0.00025,
+          "min": 0.000167,
+          "max": 0.00025,
+          "iqr": 4.200000000000002e-05,
+          "mean": 0.000225,
+          "stdev": 3.7175260590882215e-05
+        },
+        "slot_utilization": {
+          "median": 0.000129528,
+          "min": 0.000104707,
+          "max": 0.000138465,
+          "iqr": 4.273000000000005e-06,
+          "mean": 0.0001268722,
+          "stdev": 1.2973125286529843e-05
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/least-loaded/remote/tiny/2-2-2-2-2-2-2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "tiny",
+      "capacities": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "slots": 16,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 2965.32,
+          "min": 2939.02,
+          "max": 3071.59,
+          "iqr": 28.490000000000236,
+          "mean": 2982.9,
+          "stdev": 52.146436599253896
+        },
+        "elapsed_s": {
+          "median": 0.134893,
+          "min": 0.130226,
+          "max": 0.1361,
+          "iqr": 0.0012930000000000164,
+          "mean": 0.13413,
+          "stdev": 0.0023035749390892396
+        },
+        "p50_ms": {
+          "median": 9.23979,
+          "min": 8.80704,
+          "max": 10.1399,
+          "iqr": 0.20078999999999958,
+          "mean": 9.317588,
+          "stdev": 0.4976035497964219
+        },
+        "p95_ms": {
+          "median": 14.4205,
+          "min": 12.6191,
+          "max": 14.9919,
+          "iqr": 0.5388000000000002,
+          "mean": 14.25114,
+          "stdev": 0.9548166986390636
+        },
+        "p99_ms": {
+          "median": 14.8905,
+          "min": 13.0865,
+          "max": 15.5638,
+          "iqr": 0.49730000000000096,
+          "mean": 14.67998,
+          "stdev": 0.9503761081803356
+        },
+        "queue_p99_ms": {
+          "median": 14.6304,
+          "min": 12.8296,
+          "max": 15.2889,
+          "iqr": 0.5071999999999992,
+          "mean": 14.37682,
+          "stdev": 0.9342781181211516
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000209,
+          "min": 0.000208,
+          "max": 0.00025,
+          "iqr": 4.200000000000002e-05,
+          "mean": 0.000225,
+          "stdev": 2.282542442102666e-05
+        },
+        "slot_utilization": {
+          "median": 6.36344e-05,
+          "min": 5.66815e-05,
+          "max": 6.90413e-05,
+          "iqr": 4.91530000000001e-06,
+          "mean": 6.384446e-05,
+          "stdev": 4.816825559743678e-06
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/least-loaded/remote/uniform/2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "uniform",
+      "capacities": [
+        2
+      ],
+      "slots": 2,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 138.971,
+          "min": 137.339,
+          "max": 143.033,
+          "iqr": 0.9510000000000218,
+          "mean": 139.5984,
+          "stdev": 2.115256438354457
+        },
+        "elapsed_s": {
+          "median": 2.8783,
+          "min": 2.79655,
+          "max": 2.91249,
+          "iqr": 0.019600000000000062,
+          "mean": 2.865876,
+          "stdev": 0.04294856377109721
+        },
+        "p50_ms": {
+          "median": 1390.68,
+          "min": 1332.14,
+          "max": 1415.18,
+          "iqr": 21.069999999999936,
+          "mean": 1385.1660000000002,
+          "stdev": 32.08606987463561
+        },
+        "p95_ms": {
+          "median": 2670.03,
+          "min": 2580.4,
+          "max": 2699.31,
+          "iqr": 15.980000000000018,
+          "mean": 2657.544,
+          "stdev": 45.39052136735154
+        },
+        "p99_ms": {
+          "median": 2778.02,
+          "min": 2693.99,
+          "max": 2806.82,
+          "iqr": 10.61999999999989,
+          "mean": 2768.226,
+          "stdev": 43.26330639236918
+        },
+        "queue_p99_ms": {
+          "median": 2769.69,
+          "min": 2686.21,
+          "max": 2799.77,
+          "iqr": 10.700000000000273,
+          "mean": 2760.462,
+          "stdev": 43.39221036084701
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000708,
+          "min": 0.000625,
+          "max": 0.001042,
+          "iqr": 0.00016700000000000005,
+          "mean": 0.0007752,
+          "stdev": 0.00016839150809942882
+        },
+        "slot_utilization": {
+          "median": 0.466895,
+          "min": 0.457851,
+          "max": 0.479351,
+          "iqr": 0.007294999999999996,
+          "mean": 0.4677744,
+          "stdev": 0.008064936069182453
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/least-loaded/remote/uniform/2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "uniform",
+      "capacities": [
+        2,
+        2
+      ],
+      "slots": 4,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 260.373,
+          "min": 260.225,
+          "max": 267.904,
+          "iqr": 4.0260000000000105,
+          "mean": 262.6364,
+          "stdev": 3.4265683708340013
+        },
+        "elapsed_s": {
+          "median": 1.53625,
+          "min": 1.49307,
+          "max": 1.53713,
+          "iqr": 0.023399999999999865,
+          "mean": 1.523222,
+          "stdev": 0.019692991646776292
+        },
+        "p50_ms": {
+          "median": 704.15,
+          "min": 680.909,
+          "max": 736.329,
+          "iqr": 27.850000000000023,
+          "mean": 709.042,
+          "stdev": 22.15993735325079
+        },
+        "p95_ms": {
+          "median": 1384.32,
+          "min": 1337.05,
+          "max": 1398.63,
+          "iqr": 37.32999999999993,
+          "mean": 1375.666,
+          "stdev": 26.526792682116717
+        },
+        "p99_ms": {
+          "median": 1446.88,
+          "min": 1403.71,
+          "max": 1456.61,
+          "iqr": 34.710000000000036,
+          "mean": 1436.918,
+          "stdev": 23.444056176353083
+        },
+        "queue_p99_ms": {
+          "median": 1439.28,
+          "min": 1396.32,
+          "max": 1450.35,
+          "iqr": 36.26999999999998,
+          "mean": 1429.6799999999998,
+          "stdev": 23.952186747768973
+        },
+        "scheduling_p99_ms": {
+          "median": 0.00075,
+          "min": 0.000708,
+          "max": 0.001083,
+          "iqr": 0.0,
+          "mean": 0.0008082,
+          "stdev": 0.00015469065905865162
+        },
+        "slot_utilization": {
+          "median": 0.442404,
+          "min": 0.434812,
+          "max": 0.454766,
+          "iqr": 0.012994000000000006,
+          "mean": 0.445284,
+          "stdev": 0.008657019926048464
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/least-loaded/remote/uniform/2-2-2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "uniform",
+      "capacities": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "slots": 8,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 498.396,
+          "min": 492.822,
+          "max": 506.785,
+          "iqr": 9.169999999999959,
+          "mean": 499.1554,
+          "stdev": 5.939022798407158
+        },
+        "elapsed_s": {
+          "median": 0.802575,
+          "min": 0.78929,
+          "max": 0.811652,
+          "iqr": 0.014738000000000029,
+          "mean": 0.8014446000000001,
+          "stdev": 0.009515001618496974
+        },
+        "p50_ms": {
+          "median": 346.484,
+          "min": 341.153,
+          "max": 358.904,
+          "iqr": 0.7929999999999495,
+          "mean": 347.8808,
+          "stdev": 6.581045638802387
+        },
+        "p95_ms": {
+          "median": 702.549,
+          "min": 680.345,
+          "max": 712.722,
+          "iqr": 11.951999999999998,
+          "mean": 700.7216,
+          "stdev": 12.800618746763748
+        },
+        "p99_ms": {
+          "median": 732.643,
+          "min": 712.895,
+          "max": 741.774,
+          "iqr": 11.850999999999999,
+          "mean": 729.4234,
+          "stdev": 11.255813222508634
+        },
+        "queue_p99_ms": {
+          "median": 725.219,
+          "min": 705.733,
+          "max": 734.303,
+          "iqr": 11.854000000000042,
+          "mean": 722.1054,
+          "stdev": 11.150708085139733
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000542,
+          "min": 0.000291,
+          "max": 0.000709,
+          "iqr": 0.000167,
+          "mean": 0.000525,
+          "stdev": 0.0001607715770899819
+        },
+        "slot_utilization": {
+          "median": 0.416139,
+          "min": 0.41227,
+          "max": 0.428058,
+          "iqr": 0.0034199999999999786,
+          "mean": 0.4176782,
+          "stdev": 0.006146073885009836
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/least-loaded/remote/uniform/2-2-2-2-2-2-2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "uniform",
+      "capacities": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "slots": 16,
+      "policy": "least-loaded",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 944.509,
+          "min": 928.371,
+          "max": 999.69,
+          "iqr": 27.937000000000012,
+          "mean": 956.1686,
+          "stdev": 28.289847742609034
+        },
+        "elapsed_s": {
+          "median": 0.4235,
+          "min": 0.400124,
+          "max": 0.430862,
+          "iqr": 0.012278000000000011,
+          "mean": 0.418624,
+          "stdev": 0.012166852099043545
+        },
+        "p50_ms": {
+          "median": 163.638,
+          "min": 153.256,
+          "max": 168.366,
+          "iqr": 13.855999999999995,
+          "mean": 161.51000000000002,
+          "stdev": 7.347150025690236
+        },
+        "p95_ms": {
+          "median": 328.192,
+          "min": 306.239,
+          "max": 337.342,
+          "iqr": 13.328000000000031,
+          "mean": 324.0638,
+          "stdev": 12.24725935464748
+        },
+        "p99_ms": {
+          "median": 344.505,
+          "min": 323.14,
+          "max": 353.945,
+          "iqr": 12.376000000000033,
+          "mean": 340.8608,
+          "stdev": 11.995607037578388
+        },
+        "queue_p99_ms": {
+          "median": 337.405,
+          "min": 315.601,
+          "max": 347.447,
+          "iqr": 12.662999999999954,
+          "mean": 333.7584,
+          "stdev": 12.357997685709439
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000209,
+          "min": 0.000208,
+          "max": 0.00025,
+          "iqr": 4.0999999999999994e-05,
+          "mean": 0.0002252,
+          "stdev": 2.264287967551831e-05
+        },
+        "slot_utilization": {
+          "median": 0.390252,
+          "min": 0.385856,
+          "max": 0.409903,
+          "iqr": 0.014062999999999992,
+          "mean": 0.3948008,
+          "stdev": 0.01035561749486723
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/round-robin/remote/mixed/2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "mixed",
+      "capacities": [
+        2
+      ],
+      "slots": 2,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 104.423,
+          "min": 103.476,
+          "max": 104.556,
+          "iqr": 0.48799999999999955,
+          "mean": 104.1658,
+          "stdev": 0.45116593399768107
+        },
+        "elapsed_s": {
+          "median": 3.83057,
+          "min": 3.82568,
+          "max": 3.86565,
+          "iqr": 0.01800999999999986,
+          "mean": 3.84009,
+          "stdev": 0.016696561023156812
+        },
+        "p50_ms": {
+          "median": 1885.43,
+          "min": 1861.17,
+          "max": 1900.74,
+          "iqr": 14.069999999999936,
+          "mean": 1883.9660000000001,
+          "stdev": 15.104122947063132
+        },
+        "p95_ms": {
+          "median": 3568.17,
+          "min": 3550.63,
+          "max": 3602.88,
+          "iqr": 37.75,
+          "mean": 3575.826,
+          "stdev": 23.2094340732384
+        },
+        "p99_ms": {
+          "median": 3729.43,
+          "min": 3721.13,
+          "max": 3767.28,
+          "iqr": 25.90000000000009,
+          "mean": 3740.004,
+          "stdev": 19.68363101665958
+        },
+        "queue_p99_ms": {
+          "median": 3721.79,
+          "min": 3713.51,
+          "max": 3759.21,
+          "iqr": 24.590000000000146,
+          "mean": 3732.368,
+          "stdev": 19.324270232016513
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000709,
+          "min": 0.000667,
+          "max": 0.002083,
+          "iqr": 8.300000000000007e-05,
+          "mean": 0.0009752000000000001,
+          "stdev": 0.0006202364065418928
+        },
+        "slot_utilization": {
+          "median": 0.608627,
+          "min": 0.606161,
+          "max": 0.615462,
+          "iqr": 0.003379000000000021,
+          "mean": 0.6096094,
+          "stdev": 0.0036684150937427934
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/round-robin/remote/mixed/2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "mixed",
+      "capacities": [
+        2,
+        2
+      ],
+      "slots": 4,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 201.324,
+          "min": 198.606,
+          "max": 201.926,
+          "iqr": 1.3419999999999845,
+          "mean": 200.8616,
+          "stdev": 1.378454678253876
+        },
+        "elapsed_s": {
+          "median": 1.98685,
+          "min": 1.98092,
+          "max": 2.01404,
+          "iqr": 0.01326000000000005,
+          "mean": 1.991498,
+          "stdev": 0.013750595259842423
+        },
+        "p50_ms": {
+          "median": 948.241,
+          "min": 927.747,
+          "max": 959.566,
+          "iqr": 9.33299999999997,
+          "mean": 944.5889999999999,
+          "stdev": 11.900102163427023
+        },
+        "p95_ms": {
+          "median": 1810.79,
+          "min": 1798.99,
+          "max": 1837.06,
+          "iqr": 8.409999999999854,
+          "mean": 1812.6299999999999,
+          "stdev": 14.677154015680259
+        },
+        "p99_ms": {
+          "median": 1888.32,
+          "min": 1875.31,
+          "max": 1918.63,
+          "iqr": 3.9400000000000546,
+          "mean": 1891.028,
+          "stdev": 16.32575021247115
+        },
+        "queue_p99_ms": {
+          "median": 1869.44,
+          "min": 1866.69,
+          "max": 1900.14,
+          "iqr": 8.300000000000182,
+          "mean": 1875.962,
+          "stdev": 13.988145695552403
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000542,
+          "min": 0.000417,
+          "max": 0.000667,
+          "iqr": 0.000125,
+          "mean": 0.0005502,
+          "stdev": 9.94570258956098e-05
+        },
+        "slot_utilization": {
+          "median": 0.586483,
+          "min": 0.583187,
+          "max": 0.595819,
+          "iqr": 0.003886000000000056,
+          "mean": 0.587673,
+          "stdev": 0.004962322037111253
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/round-robin/remote/mixed/2-2-2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "mixed",
+      "capacities": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "slots": 8,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 366.342,
+          "min": 364.298,
+          "max": 370.09,
+          "iqr": 1.2789999999999964,
+          "mean": 366.6198,
+          "stdev": 2.1625857670853077
+        },
+        "elapsed_s": {
+          "median": 1.09188,
+          "min": 1.08082,
+          "max": 1.098,
+          "iqr": 0.0038199999999999346,
+          "mean": 1.09108,
+          "stdev": 0.006409290132300209
+        },
+        "p50_ms": {
+          "median": 465.642,
+          "min": 459.236,
+          "max": 478.242,
+          "iqr": 3.555999999999983,
+          "mean": 467.0084,
+          "stdev": 7.017615000838971
+        },
+        "p95_ms": {
+          "median": 915.935,
+          "min": 910.671,
+          "max": 926.871,
+          "iqr": 10.238999999999919,
+          "mean": 918.8792,
+          "stdev": 7.0236205905501174
+        },
+        "p99_ms": {
+          "median": 960.397,
+          "min": 946.541,
+          "max": 971.679,
+          "iqr": 17.11099999999999,
+          "mean": 958.0344,
+          "stdev": 10.959420459130108
+        },
+        "queue_p99_ms": {
+          "median": 952.664,
+          "min": 937.37,
+          "max": 964.42,
+          "iqr": 15.759999999999991,
+          "mean": 950.0068,
+          "stdev": 11.275049498782685
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000417,
+          "min": 0.000209,
+          "max": 0.000583,
+          "iqr": 8.399999999999998e-05,
+          "mean": 0.0004086,
+          "stdev": 0.00013601029372808514
+        },
+        "slot_utilization": {
+          "median": 0.535645,
+          "min": 0.528044,
+          "max": 0.547098,
+          "iqr": 0.004333999999999949,
+          "mean": 0.536987,
+          "stdev": 0.006953730114118607
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/round-robin/remote/mixed/2-2-2-2-2-2-2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "mixed",
+      "capacities": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "slots": 16,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 653.671,
+          "min": 638.08,
+          "max": 662.959,
+          "iqr": 11.11099999999999,
+          "mean": 652.0678,
+          "stdev": 9.742809127761841
+        },
+        "elapsed_s": {
+          "median": 0.611929,
+          "min": 0.603356,
+          "max": 0.62688,
+          "iqr": 0.01042999999999994,
+          "mean": 0.6135434,
+          "stdev": 0.00921716552417281
+        },
+        "p50_ms": {
+          "median": 211.928,
+          "min": 210.239,
+          "max": 217.349,
+          "iqr": 3.7549999999999955,
+          "mean": 212.9742,
+          "stdev": 2.9555372946386527
+        },
+        "p95_ms": {
+          "median": 434.832,
+          "min": 419.57,
+          "max": 446.719,
+          "iqr": 5.437999999999988,
+          "mean": 433.301,
+          "stdev": 9.829225935952433
+        },
+        "p99_ms": {
+          "median": 449.309,
+          "min": 434.134,
+          "max": 462.934,
+          "iqr": 5.13900000000001,
+          "mean": 449.54720000000003,
+          "stdev": 10.399504252607434
+        },
+        "queue_p99_ms": {
+          "median": 441.106,
+          "min": 426.329,
+          "max": 454.536,
+          "iqr": 5.363999999999976,
+          "mean": 441.3282,
+          "stdev": 10.196628055391642
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000167,
+          "min": 0.000125,
+          "max": 0.000209,
+          "iqr": 8.299999999999998e-05,
+          "mean": 0.0001668,
+          "stdev": 4.175164667411335e-05
+        },
+        "slot_utilization": {
+          "median": 0.473077,
+          "min": 0.465823,
+          "max": 0.478319,
+          "iqr": 0.004242999999999997,
+          "mean": 0.4733404,
+          "stdev": 0.004855276181639928
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/round-robin/remote/tiny/2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "tiny",
+      "capacities": [
+        2
+      ],
+      "slots": 2,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 3044.23,
+          "min": 3034.58,
+          "max": 3062.79,
+          "iqr": 5.690000000000055,
+          "mean": 3046.794,
+          "stdev": 10.350817842083789
+        },
+        "elapsed_s": {
+          "median": 0.131396,
+          "min": 0.1306,
+          "max": 0.131814,
+          "iqr": 0.0002459999999999962,
+          "mean": 0.1312868,
+          "stdev": 0.0004452771047336692
+        },
+        "p50_ms": {
+          "median": 9.14975,
+          "min": 7.43942,
+          "max": 12.1596,
+          "iqr": 2.328550000000001,
+          "mean": 9.339164,
+          "stdev": 1.9090717945457156
+        },
+        "p95_ms": {
+          "median": 13.329,
+          "min": 11.1247,
+          "max": 24.0777,
+          "iqr": 3.2612000000000005,
+          "mean": 15.333,
+          "stdev": 5.165264286074818
+        },
+        "p99_ms": {
+          "median": 13.5175,
+          "min": 11.4397,
+          "max": 24.1891,
+          "iqr": 3.4002999999999997,
+          "mean": 15.5176,
+          "stdev": 5.122712217175585
+        },
+        "queue_p99_ms": {
+          "median": 13.2618,
+          "min": 11.1538,
+          "max": 24.0555,
+          "iqr": 3.3626000000000005,
+          "mean": 15.27402,
+          "stdev": 5.179331013943789
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000125,
+          "min": 0.000125,
+          "max": 0.000167,
+          "iqr": 0.0,
+          "mean": 0.0001334,
+          "stdev": 1.878297101099823e-05
+        },
+        "slot_utilization": {
+          "median": 0.000473741,
+          "min": 0.000356031,
+          "max": 0.000533457,
+          "iqr": 2.494200000000002e-05,
+          "mean": 0.0004605774,
+          "stdev": 6.499404222926899e-05
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/round-robin/remote/tiny/2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "tiny",
+      "capacities": [
+        2,
+        2
+      ],
+      "slots": 4,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 3034.07,
+          "min": 2984.41,
+          "max": 3182.25,
+          "iqr": 10.919999999999618,
+          "mean": 3055.158,
+          "stdev": 74.63825373091203
+        },
+        "elapsed_s": {
+          "median": 0.131836,
+          "min": 0.125697,
+          "max": 0.13403,
+          "iqr": 0.0004740000000000022,
+          "mean": 0.13098700000000002,
+          "stdev": 0.00312467158274274
+        },
+        "p50_ms": {
+          "median": 10.1349,
+          "min": 8.984,
+          "max": 10.6438,
+          "iqr": 1.4810400000000001,
+          "mean": 9.848732,
+          "stdev": 0.8034244538971914
+        },
+        "p95_ms": {
+          "median": 13.8733,
+          "min": 11.8896,
+          "max": 15.4988,
+          "iqr": 2.5312,
+          "mean": 13.77314,
+          "stdev": 1.5605135302201003
+        },
+        "p99_ms": {
+          "median": 14.0781,
+          "min": 12.9727,
+          "max": 15.6496,
+          "iqr": 1.9539999999999988,
+          "mean": 14.23688,
+          "stdev": 1.1756115842403048
+        },
+        "queue_p99_ms": {
+          "median": 13.8113,
+          "min": 12.7201,
+          "max": 15.363,
+          "iqr": 1.9405000000000001,
+          "mean": 13.96478,
+          "stdev": 1.1630319974102172
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000166,
+          "min": 0.000125,
+          "max": 0.00025,
+          "iqr": 9.999999999999972e-07,
+          "mean": 0.0001748,
+          "stdev": 4.569135585644182e-05
+        },
+        "slot_utilization": {
+          "median": 0.000242017,
+          "min": 0.000235533,
+          "max": 0.000276205,
+          "iqr": 1.4037000000000028e-05,
+          "mean": 0.000248674,
+          "stdev": 1.6608550659223705e-05
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/round-robin/remote/tiny/2-2-2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "tiny",
+      "capacities": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "slots": 8,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 2982.6,
+          "min": 2947.02,
+          "max": 3143.57,
+          "iqr": 13.429999999999836,
+          "mean": 3007.4,
+          "stdev": 77.77085861683676
+        },
+        "elapsed_s": {
+          "median": 0.134111,
+          "min": 0.127244,
+          "max": 0.13573,
+          "iqr": 0.0006040000000000212,
+          "mean": 0.1330742,
+          "stdev": 0.003338657469702456
+        },
+        "p50_ms": {
+          "median": 9.93379,
+          "min": 7.08571,
+          "max": 10.663,
+          "iqr": 2.19745,
+          "mean": 9.31509,
+          "stdev": 1.550701738746043
+        },
+        "p95_ms": {
+          "median": 14.2354,
+          "min": 9.25563,
+          "max": 14.9344,
+          "iqr": 2.6867,
+          "mean": 13.116746,
+          "stdev": 2.4238545214348157
+        },
+        "p99_ms": {
+          "median": 14.327,
+          "min": 10.2785,
+          "max": 15.105,
+          "iqr": 2.3621,
+          "mean": 13.48972,
+          "stdev": 2.0432597649344544
+        },
+        "queue_p99_ms": {
+          "median": 14.0373,
+          "min": 9.94562,
+          "max": 14.7769,
+          "iqr": 2.349,
+          "mean": 13.185324,
+          "stdev": 2.051248935375714
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000167,
+          "min": 0.000167,
+          "max": 0.00025,
+          "iqr": 4.0999999999999994e-05,
+          "mean": 0.0001918,
+          "stdev": 3.7063459093829874e-05
+        },
+        "slot_utilization": {
+          "median": 0.000148679,
+          "min": 0.000138994,
+          "max": 0.000164995,
+          "iqr": 1.5597000000000007e-05,
+          "mean": 0.000153087,
+          "stdev": 1.1216178114669897e-05
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/round-robin/remote/tiny/2-2-2-2-2-2-2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "tiny",
+      "capacities": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "slots": 16,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 2931.28,
+          "min": 2901.38,
+          "max": 3038.37,
+          "iqr": 59.179999999999836,
+          "mean": 2949.386,
+          "stdev": 56.042965481851404
+        },
+        "elapsed_s": {
+          "median": 0.136459,
+          "min": 0.13165,
+          "max": 0.137865,
+          "iqr": 0.0027429999999999954,
+          "mean": 0.13566019999999998,
+          "stdev": 0.0025421238561486336
+        },
+        "p50_ms": {
+          "median": 11.834,
+          "min": 8.433,
+          "max": 12.9368,
+          "iqr": 1.2753000000000014,
+          "mean": 11.23162,
+          "stdev": 1.7346858078626228
+        },
+        "p95_ms": {
+          "median": 15.6706,
+          "min": 12.3812,
+          "max": 17.7626,
+          "iqr": 1.8363000000000014,
+          "mean": 15.67354,
+          "stdev": 2.0986403450805953
+        },
+        "p99_ms": {
+          "median": 15.8878,
+          "min": 12.7588,
+          "max": 18.3544,
+          "iqr": 1.6667000000000005,
+          "mean": 16.0423,
+          "stdev": 2.131538104280568
+        },
+        "queue_p99_ms": {
+          "median": 15.5704,
+          "min": 12.4394,
+          "max": 18.0634,
+          "iqr": 1.6324999999999985,
+          "mean": 15.74634,
+          "stdev": 2.141709034392861
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000167,
+          "min": 0.000166,
+          "max": 0.000292,
+          "iqr": 4.0999999999999994e-05,
+          "mean": 0.00019999999999999998,
+          "stdev": 5.4456404582014045e-05
+        },
+        "slot_utilization": {
+          "median": 8.72345e-05,
+          "min": 8.21086e-05,
+          "max": 9.29079e-05,
+          "iqr": 3.829299999999987e-06,
+          "mean": 8.660922e-05,
+          "stdev": 4.20083273970769e-06
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/round-robin/remote/uniform/2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "uniform",
+      "capacities": [
+        2
+      ],
+      "slots": 2,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 138.267,
+          "min": 137.527,
+          "max": 139.642,
+          "iqr": 0.7909999999999968,
+          "mean": 138.4306,
+          "stdev": 0.8114778493588126
+        },
+        "elapsed_s": {
+          "median": 2.89295,
+          "min": 2.86446,
+          "max": 2.90852,
+          "iqr": 0.016529999999999934,
+          "mean": 2.889612,
+          "stdev": 0.016897638000620215
+        },
+        "p50_ms": {
+          "median": 1379.88,
+          "min": 1375.66,
+          "max": 1384.24,
+          "iqr": 1.3099999999999454,
+          "mean": 1380.106,
+          "stdev": 3.0785840901297155
+        },
+        "p95_ms": {
+          "median": 2674.92,
+          "min": 2648.79,
+          "max": 2681.15,
+          "iqr": 19.049999999999727,
+          "mean": 2669.55,
+          "stdev": 13.991138266774426
+        },
+        "p99_ms": {
+          "median": 2788.74,
+          "min": 2761.77,
+          "max": 2801.09,
+          "iqr": 17.61999999999989,
+          "mean": 2784.328,
+          "stdev": 15.53611663190002
+        },
+        "queue_p99_ms": {
+          "median": 2780.92,
+          "min": 2753.94,
+          "max": 2795.0,
+          "iqr": 16.51000000000022,
+          "mean": 2777.274,
+          "stdev": 15.891780265281813
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000583,
+          "min": 0.000459,
+          "max": 0.000792,
+          "iqr": 8.300000000000007e-05,
+          "mean": 0.0006002,
+          "stdev": 0.00012351396682157043
+        },
+        "slot_utilization": {
+          "median": 0.465865,
+          "min": 0.460324,
+          "max": 0.468569,
+          "iqr": 0.004601000000000022,
+          "mean": 0.4650606,
+          "stdev": 0.003393586347803753
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/round-robin/remote/uniform/2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "uniform",
+      "capacities": [
+        2,
+        2
+      ],
+      "slots": 4,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 261.941,
+          "min": 258.877,
+          "max": 266.278,
+          "iqr": 4.1089999999999804,
+          "mean": 262.815,
+          "stdev": 3.0665913487127696
+        },
+        "elapsed_s": {
+          "median": 1.52706,
+          "min": 1.50219,
+          "max": 1.54514,
+          "iqr": 0.023679999999999923,
+          "mean": 1.52215,
+          "stdev": 0.017768953261236304
+        },
+        "p50_ms": {
+          "median": 708.245,
+          "min": 699.706,
+          "max": 722.813,
+          "iqr": 8.855000000000018,
+          "mean": 710.9582,
+          "stdev": 8.887386719390571
+        },
+        "p95_ms": {
+          "median": 1376.08,
+          "min": 1362.0,
+          "max": 1397.46,
+          "iqr": 15.240000000000009,
+          "mean": 1376.18,
+          "stdev": 14.09387810363069
+        },
+        "p99_ms": {
+          "median": 1439.41,
+          "min": 1415.12,
+          "max": 1454.43,
+          "iqr": 25.99000000000001,
+          "mean": 1433.31,
+          "stdev": 17.267389785372952
+        },
+        "queue_p99_ms": {
+          "median": 1432.06,
+          "min": 1407.63,
+          "max": 1447.12,
+          "iqr": 25.339999999999918,
+          "mean": 1425.7259999999999,
+          "stdev": 17.267987143845033
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000542,
+          "min": 0.000417,
+          "max": 0.000667,
+          "iqr": 0.000125,
+          "mean": 0.0005338,
+          "stdev": 9.945702589560979e-05
+        },
+        "slot_utilization": {
+          "median": 0.437281,
+          "min": 0.430991,
+          "max": 0.442043,
+          "iqr": 0.0030979999999999897,
+          "mean": 0.436905,
+          "stdev": 0.004074144634153284
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/round-robin/remote/uniform/2-2-2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "uniform",
+      "capacities": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "slots": 8,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 494.914,
+          "min": 488.046,
+          "max": 507.956,
+          "iqr": 11.704000000000008,
+          "mean": 497.2968,
+          "stdev": 8.27405760192665
+        },
+        "elapsed_s": {
+          "median": 0.808222,
+          "min": 0.78747,
+          "max": 0.819594,
+          "iqr": 0.018895999999999913,
+          "mean": 0.804526,
+          "stdev": 0.013337917903481034
+        },
+        "p50_ms": {
+          "median": 352.575,
+          "min": 346.669,
+          "max": 360.547,
+          "iqr": 4.675999999999988,
+          "mean": 352.5454,
+          "stdev": 5.287074455689096
+        },
+        "p95_ms": {
+          "median": 696.759,
+          "min": 684.888,
+          "max": 708.561,
+          "iqr": 18.81000000000006,
+          "mean": 697.1652,
+          "stdev": 10.706258716283681
+        },
+        "p99_ms": {
+          "median": 730.595,
+          "min": 717.854,
+          "max": 741.54,
+          "iqr": 17.604000000000042,
+          "mean": 728.8306,
+          "stdev": 10.561644228054634
+        },
+        "queue_p99_ms": {
+          "median": 723.471,
+          "min": 710.588,
+          "max": 734.038,
+          "iqr": 18.383000000000038,
+          "mean": 721.7236,
+          "stdev": 10.629535610740502
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000334,
+          "min": 0.000208,
+          "max": 0.000417,
+          "iqr": 0.000167,
+          "mean": 0.0003252,
+          "stdev": 9.529270696123602e-05
+        },
+        "slot_utilization": {
+          "median": 0.424879,
+          "min": 0.413518,
+          "max": 0.429911,
+          "iqr": 0.013259999999999994,
+          "mean": 0.421726,
+          "stdev": 0.007699336789620258
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    },
+    {
+      "case_id": "scaling/round-robin/remote/uniform/2-2-2-2-2-2-2-2",
+      "scenario": "scaling",
+      "mode": "remote",
+      "workload": "uniform",
+      "capacities": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "slots": 16,
+      "policy": "round-robin",
+      "latency_scope": "coordinator",
+      "pattern": "burst",
+      "tasks": 400,
+      "n": 5,
+      "metrics": {
+        "throughput_per_s": {
+          "median": 959.918,
+          "min": 947.341,
+          "max": 967.41,
+          "iqr": 7.5090000000000146,
+          "mean": 957.7216,
+          "stdev": 7.6774014679447244
+        },
+        "elapsed_s": {
+          "median": 0.416702,
+          "min": 0.413475,
+          "max": 0.422234,
+          "iqr": 0.003280000000000005,
+          "mean": 0.4176794,
+          "stdev": 0.003352333560372539
+        },
+        "p50_ms": {
+          "median": 165.507,
+          "min": 156.902,
+          "max": 166.429,
+          "iqr": 2.282999999999987,
+          "mean": 163.8534,
+          "stdev": 4.000040662293328
+        },
+        "p95_ms": {
+          "median": 326.028,
+          "min": 321.901,
+          "max": 333.27,
+          "iqr": 3.40300000000002,
+          "mean": 326.5696,
+          "stdev": 4.297821227087037
+        },
+        "p99_ms": {
+          "median": 342.511,
+          "min": 337.599,
+          "max": 346.613,
+          "iqr": 1.815999999999974,
+          "mean": 342.2422,
+          "stdev": 3.2551646194931547
+        },
+        "queue_p99_ms": {
+          "median": 335.468,
+          "min": 330.552,
+          "max": 339.806,
+          "iqr": 1.4639999999999986,
+          "mean": 335.0716,
+          "stdev": 3.326292650985466
+        },
+        "scheduling_p99_ms": {
+          "median": 0.000167,
+          "min": 0.000125,
+          "max": 0.00025,
+          "iqr": 4.200000000000002e-05,
+          "mean": 0.0001836,
+          "stdev": 4.753735373366928e-05
+        },
+        "slot_utilization": {
+          "median": 0.395689,
+          "min": 0.389545,
+          "max": 0.40064,
+          "iqr": 0.007431999999999994,
+          "mean": 0.395364,
+          "stdev": 0.004728732282546778
+        },
+        "accepted": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "rejected": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "completed": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "failed": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "attempts": {
+          "median": 400,
+          "min": 400,
+          "max": 400,
+          "iqr": 0.0,
+          "mean": 400,
+          "stdev": 0.0
+        },
+        "recovered_tasks": {
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "iqr": 0.0,
+          "mean": 0,
+          "stdev": 0.0
+        },
+        "detection_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "reassignment_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        },
+        "recovery_observed_ms": {
+          "median": -1.0,
+          "min": -1.0,
+          "max": -1.0,
+          "iqr": 0.0,
+          "mean": -1.0,
+          "stdev": 0.0
+        }
+      }
+    }
+  ]
+}
