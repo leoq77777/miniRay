@@ -1,0 +1,14 @@
+/build*/
+__pycache__/
+*.py[cod]
+*.log
+.DS_Store
+/.gitnexus/
+
+# Keep only the reviewed, reproducible benchmark dataset.
+/benchmarks/results/*
+!/benchmarks/results/2026-10-31/
+/benchmarks/results/2026-10-31/*
+!/benchmarks/results/2026-10-31/raw.json
+!/benchmarks/results/2026-10-31/summary.json
+!/benchmarks/results/2026-10-31/report.md

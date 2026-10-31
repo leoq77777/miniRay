@@ -1,0 +1,71 @@
+syntax = "proto3";
+package miniray.rpc;
+enum TaskStatus {
+  TASK_STATUS_UNKNOWN = 0;
+  TASK_STATUS_SUBMITTED = 1;
+  TASK_STATUS_PENDING = 2;
+  TASK_STATUS_DISPATCHED = 3;
+  TASK_STATUS_RUNNING = 4;
+  TASK_STATUS_COMPLETED = 5;
+  TASK_STATUS_FAILED = 6;
+}
+message TaskSpec {
+  string task_id = 1;
+  string task_type = 2;
+  bytes payload = 3;
+  uint32 attempt_id = 4;
+}
+message SubmitTaskRequest {
+  string task_type = 1;
+  bytes payload = 2;
+  string task_id = 3; // Optional idempotency key; reuse after an ambiguous RPC failure.
+  uint32 max_retries = 4; // Retries in addition to the initial attempt.
+  bool retryable = 5;
+}
+message SubmitTaskResponse {
+  string task_id = 1;
+  bool accepted = 2;
+  string error_message = 3;
+}
+message GetTaskResultRequest { string task_id = 1; uint32 timeout_ms = 2; }
+message GetTaskResultResponse {
+  string task_id = 1;
+  TaskStatus status = 2;
+  bytes result = 3;
+  string error_message = 4;
+  uint32 attempt_id = 5;
+  string worker_id = 6;
+  double queue_ms = 7;
+  double completion_ms = 8; // Coordinator admission to terminal state, excluding polling delay.
+  double execution_ms = 9;
+  double scheduling_ms = 10;
+}
+message DispatchTaskRequest { TaskSpec task = 1; }
+message DispatchTaskResponse { bool accepted = 1; string error_message = 2; }
+message HeartbeatRequest {
+  string worker_id = 1; // Unique for each worker process incarnation.
+  string worker_address = 2;
+  uint32 capacity = 3;
+  uint32 active_tasks = 4; // Diagnostic only; coordinator owns slot reservations.
+}
+message HeartbeatResponse { bool ack = 1; }
+message ReportResultRequest {
+  string task_id = 1;
+  uint32 attempt_id = 2;
+  string worker_id = 3;
+  TaskStatus status = 4;
+  bytes result = 5;
+  string error_message = 6;
+  bool retryable = 7;
+  double execution_ms = 8;
+}
+message ReportResultResponse { bool accepted = 1; }
+service CoordinatorService {
+  rpc SubmitTask(SubmitTaskRequest) returns (SubmitTaskResponse);
+  rpc GetTaskResult(GetTaskResultRequest) returns (GetTaskResultResponse);
+  rpc SendHeartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+  rpc ReportResult(ReportResultRequest) returns (ReportResultResponse);
+}
+service WorkerService {
+  rpc DispatchTask(DispatchTaskRequest) returns (DispatchTaskResponse);
+}

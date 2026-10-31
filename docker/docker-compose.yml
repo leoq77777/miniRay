@@ -1,0 +1,28 @@
+services:
+  coordinator:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: miniray:local
+    command: ["./build/miniray-coordinator", "--policy", "${MINIRAY_POLICY:-least-loaded}", "--max-pending", "4096"]
+    ports: ["127.0.0.1:50051:50051"]
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/50051"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
+    stop_grace_period: 10s
+  worker-a:
+    image: miniray:local
+    depends_on:
+      coordinator:
+        condition: service_healthy
+    command: ["./build/miniray-worker", "--coordinator", "coordinator:50051", "--advertise", "worker-a:50052", "--capacity", "2"]
+    stop_grace_period: 75s
+  worker-b:
+    image: miniray:local
+    depends_on:
+      coordinator:
+        condition: service_healthy
+    command: ["./build/miniray-worker", "--coordinator", "coordinator:50051", "--advertise", "worker-b:50052", "--capacity", "4"]
+    stop_grace_period: 75s
