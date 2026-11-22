@@ -203,3 +203,114 @@ TEST(Rpc, SpeculativeHedgingAndCooperativeCancellationCutStragglerLatency) {
   w_fast.Stop(); ws2->Shutdown(); ws2->Wait();
   coordinator.Stop(); cs->Shutdown(); cs->Wait();
 }
+
+TEST(Rpc, ZeroCopySharedMemoryDagCrossHostPullSingleflightAndLineage) {
+  CoordinatorOptions coord_opts;
+  coord_opts.max_pending = 64;
+  coord_opts.heartbeat_timeout = 300ms;
+  CoordinatorService coordinator(coord_opts);
+  int cp = 0; auto cs = Serve(coordinator, cp); ASSERT_TRUE(cs);
+
+  std::atomic<int> zero_copy_reads{0};
+  TaskRegistry registry;
+  RegisterBuiltins(registry);
+
+  // Produces an 8 MiB deterministic binary tensor (8x larger than V1's 1 MiB limit!).
+  registry.RegisterDagTask("produce_8mb", [](const std::string& seed_str, const TaskContext&) {
+    char fill = seed_str.empty() ? 'A' : seed_str[0];
+    return std::string(8 * 1024 * 1024, fill);
+  });
+
+  // Consumes upstream ObjectRef directly via zero-copy mmap view!
+  registry.RegisterDagTask("checksum_dep", [&](const std::string& tag, const TaskContext& ctx) {
+    if (ctx.args.size() != 1) throw std::invalid_argument("expected 1 dependency arg");
+    if (ctx.args[0].is_zero_copy_shm()) ++zero_copy_reads;
+    return tag + ":" + std::to_string(ctx.args[0].size()) + ":" + std::to_string(Crc32(ctx.args[0].bytes()));
+  });
+
+  registry.RegisterDagTask("reduce_pair", [&](const std::string&, const TaskContext& ctx) {
+    if (ctx.args.size() != 2) throw std::invalid_argument("expected 2 dependency args");
+    return std::string(ctx.args[0].view()) + "|" + std::string(ctx.args[1].view());
+  });
+
+  // 1. Same-Host Zero-Copy Diamond DAG across 2 distinct WorkerServices sharing LocalHostId().
+  WorkerOptions w1_opts; w1_opts.id = "w-hostA-1"; w1_opts.coordinator = Address(cp); w1_opts.capacity = 2; w1_opts.heartbeat_interval = 30ms;
+  WorkerOptions w2_opts; w2_opts.id = "w-hostA-2"; w2_opts.coordinator = Address(cp); w2_opts.capacity = 2; w2_opts.heartbeat_interval = 30ms;
+  WorkerService w1(w1_opts, registry);
+  WorkerService w2(w2_opts, registry);
+  int wp1 = 0, wp2 = 0;
+  auto ws1 = Serve(w1, wp1); ASSERT_TRUE(ws1);
+  auto ws2 = Serve(w2, wp2); ASSERT_TRUE(ws2);
+  w1.Start(Address(wp1));
+  w2.Start(Address(wp2));
+
+  MiniRayClient client(Address(cp));
+  auto root = client.Submit("produce_8mb", "X");
+  auto left = client.SubmitDag("checksum_dep", "L", std::vector<TaskFuture>{root});
+  auto right = client.SubmitDag("checksum_dep", "R", std::vector<TaskFuture>{root});
+  auto sink = client.SubmitDag("reduce_pair", "", std::vector<TaskFuture>{left, right});
+
+  uint32_t expected_crc = Crc32(std::string(8 * 1024 * 1024, 'X'));
+  std::string expected_sink =
+      "L:8388608:" + std::to_string(expected_crc) + "|R:8388608:" + std::to_string(expected_crc);
+  EXPECT_EQ(sink.Get(10s), expected_sink);
+  EXPECT_EQ(zero_copy_reads.load(), 2);
+  // Same-host consumers mapped POSIX shm directly without invoking PullObject RPC!
+  EXPECT_EQ(w1.pull_rpc_count() + w2.pull_rpc_count(), 0u);
+
+  // Client on the same host also maps the 8 MiB result with zero-copy POSIX shm!
+  auto client_view = root.GetView(5s);
+  EXPECT_TRUE(client_view.is_zero_copy_shm());
+  EXPECT_EQ(client_view.size(), 8ull * 1024 * 1024);
+
+  // 2. Cross-Host Streaming PullObject + Singleflight deduplication on a simulated remote host ("remote-rack").
+  // First retire w2 and saturate both slots of w1, then bring up w_remote so all 4 consumers land concurrently on w_remote.
+  w2.Stop(); ws2->Shutdown(); ws2->Wait();
+  std::this_thread::sleep_for(360ms); // Let w2 expire cleanly.
+  auto b1 = client.Submit("sleep", "400");
+  auto b2 = client.Submit("sleep", "400");
+  std::this_thread::sleep_for(50ms); // Both b1 and b2 now occupy w1's 2 slots!
+
+  WorkerOptions w3_opts;
+  w3_opts.id = "w-hostB-remote";
+  w3_opts.host_id = "simulated-remote-rack";
+  w3_opts.coordinator = Address(cp);
+  w3_opts.capacity = 4;
+  w3_opts.heartbeat_interval = 30ms;
+  WorkerService w_remote(w3_opts, registry);
+  int wp3 = 0;
+  auto ws3 = Serve(w_remote, wp3); ASSERT_TRUE(ws3);
+  w_remote.Start(Address(wp3));
+  std::this_thread::sleep_for(50ms); // Wait for w_remote initial registration heartbeat.
+
+  std::vector<TaskFuture> remote_consumers;
+  for (int i = 0; i < 4; ++i) {
+    remote_consumers.push_back(client.SubmitDag("checksum_dep", "REM", std::vector<TaskFuture>{root}));
+  }
+  for (auto& f : remote_consumers) {
+    EXPECT_EQ(f.Get(10s), "REM:8388608:" + std::to_string(expected_crc));
+  }
+  EXPECT_EQ(b1.Get(5s), "400");
+  EXPECT_EQ(b2.Get(5s), "400");
+  // Singleflight: 4 concurrent tasks on w_remote pulled the 8 MiB object from w1 only ONCE!
+  EXPECT_EQ(w1.pull_rpc_count(), 1u);
+
+  // 3. End-to-End Object Lineage Reconstruction when sole object owner crashes!
+  auto ephemeral = client.Submit("produce_8mb", "Q");
+  EXPECT_EQ(ephemeral.Wait(5s).status(), rpc::TASK_STATUS_COMPLETED);
+  // Stop w1 (if ephemeral landed on w1) or w_remote (whichever owns ephemeral) and verify lineage reconstructs it!
+  std::string owner_id = ephemeral.Wait(5s).worker_id();
+  if (owner_id == w1.id()) {
+    w1.Stop(); ws1->Shutdown(); ws1->Wait();
+  } else {
+    w_remote.Stop(); ws3->Shutdown(); ws3->Wait();
+  }
+  std::this_thread::sleep_for(380ms); // Exceed 300ms heartbeat_timeout so Coordinator marks owner dead.
+  auto recovered_consumer = client.SubmitDag("checksum_dep", "REC", std::vector<TaskFuture>{ephemeral});
+  uint32_t q_crc = Crc32(std::string(8 * 1024 * 1024, 'Q'));
+  EXPECT_EQ(recovered_consumer.Get(10s), "REC:8388608:" + std::to_string(q_crc));
+
+  if (owner_id != w1.id()) { w1.Stop(); ws1->Shutdown(); ws1->Wait(); }
+  if (owner_id != w_remote.id()) { w_remote.Stop(); ws3->Shutdown(); ws3->Wait(); }
+  coordinator.Stop(); cs->Shutdown(); cs->Wait();
+}

@@ -1,5 +1,6 @@
 syntax = "proto3";
 package miniray.rpc;
+
 enum TaskStatus {
   TASK_STATUS_UNKNOWN = 0;
   TASK_STATUS_SUBMITTED = 1;
@@ -8,26 +9,55 @@ enum TaskStatus {
   TASK_STATUS_RUNNING = 4;
   TASK_STATUS_COMPLETED = 5;
   TASK_STATUS_FAILED = 6;
+  TASK_STATUS_WAITING_DEPS = 7;
 }
+
+message ObjectRef {
+  string object_id = 1;
+  uint64 size_bytes = 2;
+  uint32 crc32 = 3;
+  string owner_worker_id = 4;
+  string owner_address = 5;
+  string host_id = 6;
+  string shm_name = 7;
+  repeated string replica_addresses = 8;
+}
+
+message TaskArg {
+  oneof source {
+    bytes inline_data = 1;
+    ObjectRef object_ref = 2;
+  }
+}
+
 message TaskSpec {
   string task_id = 1;
   string task_type = 2;
   bytes payload = 3;
   uint32 attempt_id = 4;
+  repeated TaskArg args = 5;
 }
+
 message SubmitTaskRequest {
   string task_type = 1;
   bytes payload = 2;
   string task_id = 3; // Optional idempotency key; reuse after an ambiguous RPC failure.
   uint32 max_retries = 4; // Retries in addition to the initial attempt.
   bool retryable = 5;
+  repeated string dependencies = 6; // Upstream task_ids whose outputs are passed via TaskSpec.args.
 }
+
 message SubmitTaskResponse {
   string task_id = 1;
   bool accepted = 2;
   string error_message = 3;
 }
-message GetTaskResultRequest { string task_id = 1; uint32 timeout_ms = 2; }
+
+message GetTaskResultRequest {
+  string task_id = 1;
+  uint32 timeout_ms = 2;
+}
+
 message GetTaskResultResponse {
   string task_id = 1;
   TaskStatus status = 2;
@@ -39,11 +69,14 @@ message GetTaskResultResponse {
   double completion_ms = 8; // Coordinator admission to terminal state, excluding polling delay.
   double execution_ms = 9;
   double scheduling_ms = 10;
+  ObjectRef result_ref = 11;
 }
+
 message DispatchTaskRequest { TaskSpec task = 1; }
 message DispatchTaskResponse { bool accepted = 1; string error_message = 2; }
 message DispatchBatchRequest { repeated TaskSpec tasks = 1; }
 message DispatchBatchResponse { repeated DispatchTaskResponse results = 1; }
+
 message CancelTaskRequest {
   string task_id = 1;
   uint32 attempt_id = 2;
@@ -53,13 +86,35 @@ message CancelTaskResponse {
   bool cancelled_or_absent = 1;
   bool slot_freed = 2;
 }
+
+message PullObjectRequest {
+  string object_id = 1;
+}
+message ObjectChunk {
+  bytes data = 1;
+  uint64 total_size = 2;
+  uint32 crc32 = 3;
+}
+
+message CachedReplica {
+  string object_id = 1;
+  string shm_name = 2;
+}
+
 message HeartbeatRequest {
   string worker_id = 1; // Unique for each worker process incarnation.
   string worker_address = 2;
   uint32 capacity = 3;
   uint32 active_tasks = 4; // Diagnostic only; coordinator owns slot reservations.
+  string host_id = 5;
+  repeated CachedReplica cached_objects = 6;
 }
-message HeartbeatResponse { bool ack = 1; }
+
+message HeartbeatResponse {
+  bool ack = 1;
+  repeated string release_objects = 2;
+}
+
 message ReportResultRequest {
   string task_id = 1;
   uint32 attempt_id = 2;
@@ -69,16 +124,20 @@ message ReportResultRequest {
   string error_message = 6;
   bool retryable = 7;
   double execution_ms = 8;
+  ObjectRef result_ref = 9;
 }
 message ReportResultResponse { bool accepted = 1; }
+
 service CoordinatorService {
   rpc SubmitTask(SubmitTaskRequest) returns (SubmitTaskResponse);
   rpc GetTaskResult(GetTaskResultRequest) returns (GetTaskResultResponse);
   rpc SendHeartbeat(HeartbeatRequest) returns (HeartbeatResponse);
   rpc ReportResult(ReportResultRequest) returns (ReportResultResponse);
 }
+
 service WorkerService {
   rpc DispatchTask(DispatchTaskRequest) returns (DispatchTaskResponse);
   rpc DispatchBatch(DispatchBatchRequest) returns (DispatchBatchResponse);
   rpc CancelTask(CancelTaskRequest) returns (CancelTaskResponse);
+  rpc PullObject(PullObjectRequest) returns (stream ObjectChunk);
 }

@@ -33,5 +33,34 @@ void RegisterBuiltins(TaskRegistry& registry) {
     if (token.IsCancelled()) throw TaskCancelledError();
     return payload;
   });
+  registry.RegisterTask("blob_produce", [](const std::string& payload) {
+    const auto bytes = Number(payload, 128ull * 1024 * 1024);
+    std::string out(static_cast<size_t>(bytes), '\0');
+    uint64_t state = 0x9E3779B97F4A7C15ull ^ bytes;
+    for (size_t offset = 0; offset < out.size(); offset += 4096) {
+      state ^= state >> 12;
+      state ^= state << 25;
+      state ^= state >> 27;
+      out[offset] = static_cast<char>((state * 0x2545F4914F6CDD1Dull) & 0xFFu);
+    }
+    if (!out.empty()) out.back() = static_cast<char>(bytes & 0xFFu);
+    return out;
+  });
+  registry.RegisterDagTask("blob_reduce", [](const std::string& payload, const TaskContext& ctx) {
+    uint64_t acc = payload.size();
+    uint64_t total_bytes = 0;
+    uint32_t zero_copy_views = 0;
+    for (const auto& view : ctx.args) {
+      if (ctx.token.IsCancelled()) throw TaskCancelledError();
+      const auto span = view.view();
+      total_bytes += span.size();
+      if (view.is_zero_copy_shm()) ++zero_copy_views;
+      for (size_t offset = 0; offset < span.size(); offset += 4096) {
+        acc = (acc * 1315423911ull) ^ static_cast<uint8_t>(span[offset]);
+      }
+      if (!span.empty()) acc ^= static_cast<uint8_t>(span.back());
+    }
+    return std::to_string(total_bytes) + ":" + std::to_string(zero_copy_views) + ":" + std::to_string(acc);
+  });
 }
 }  // namespace miniray

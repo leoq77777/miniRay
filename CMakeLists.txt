@@ -22,7 +22,7 @@ add_custom_command(
 add_library(miniray_proto ${GENERATED_DIR}/miniray.pb.cc ${GENERATED_DIR}/miniray.grpc.pb.cc)
 target_include_directories(miniray_proto PUBLIC ${GENERATED_DIR})
 target_link_libraries(miniray_proto PUBLIC protobuf::libprotobuf gRPC::grpc++)
-add_library(miniray src/state.cpp src/coordinator.cpp src/worker.cpp src/client.cpp src/builtins.cpp)
+add_library(miniray src/object_store.cpp src/state.cpp src/coordinator.cpp src/worker.cpp src/client.cpp src/builtins.cpp)
 target_include_directories(miniray PUBLIC include)
 target_link_libraries(miniray PUBLIC miniray_proto Threads::Threads)
 target_compile_options(miniray PRIVATE -Wall -Wextra -Wpedantic)
@@ -59,5 +59,9 @@ if(BUILD_TESTING)
   add_test(NAME process-recovery COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/process_recovery.py
     $<TARGET_FILE:miniray-coordinator> $<TARGET_FILE:miniray-worker> $<TARGET_FILE:distributed-compute>)
   set_tests_properties(process-recovery PROPERTIES TIMEOUT 45)
+  if(MINIRAY_SANITIZER STREQUAL "thread")
+    set_tests_properties(runtime process-recovery PROPERTIES
+      ENVIRONMENT "TSAN_OPTIONS=suppressions=${CMAKE_CURRENT_SOURCE_DIR}/tests/tsan.supp")
+  endif()
   add_test(NAME benchmark-accounting COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/benchmark_suite_test.py)
 endif()

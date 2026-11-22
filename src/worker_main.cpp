@@ -4,13 +4,16 @@
 
 int main(int argc, char** argv) {
   try {
-    miniray::Arguments args(argc, argv, {"coordinator", "listen", "advertise", "capacity", "heartbeat-ms"});
+    miniray::Arguments args(
+        argc, argv, {"coordinator", "listen", "advertise", "capacity", "heartbeat-ms", "host-id", "inline-threshold"});
     miniray::WorkerOptions options;
     options.coordinator = args.Get("coordinator", "localhost:50051");
     auto listen = args.Get("listen", "0.0.0.0:50052");
     options.address = args.Get("advertise", "localhost:50052");
     options.capacity = args.Number("capacity", 2);
     options.heartbeat_interval = std::chrono::milliseconds(args.Number("heartbeat-ms", 500));
+    options.host_id = args.Get("host-id", miniray::LocalHostId());
+    options.inline_threshold_bytes = args.Number("inline-threshold", 64 * 1024);
     miniray::TaskRegistry registry;
     miniray::RegisterBuiltins(registry);
     miniray::WorkerService service(options, registry);

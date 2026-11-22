@@ -61,9 +61,12 @@ void CoordinatorService::DispatchBatchAsync(DispatchBatchWork batch) {
   }
   stub->async()->DispatchBatch(&call->context, &call->request, &call->response,
                                [this, stub, call](grpc::Status status) {
+                                 {
+                                   std::lock_guard lock(rpc_mutex_);
+                                   active_contexts_.erase(&call->context);
+                                 }
                                  state_.DispatchedBatch(call->items, status, call->response);
                                  std::lock_guard lock(rpc_mutex_);
-                                 active_contexts_.erase(&call->context);
                                  if (--inflight_rpcs_ == 0) rpc_cv_.notify_all();
                                });
 }
@@ -84,9 +87,12 @@ void CoordinatorService::CancelTaskAsync(CancelWork cancel) {
   }
   stub->async()->CancelTask(&call->context, &call->request, &call->response,
                             [this, stub, call](grpc::Status status) {
+                              {
+                                std::lock_guard lock(rpc_mutex_);
+                                active_contexts_.erase(&call->context);
+                              }
                               if (status.ok()) state_.CancelAck(call->cancel, call->response.slot_freed());
                               std::lock_guard lock(rpc_mutex_);
-                              active_contexts_.erase(&call->context);
                               if (--inflight_rpcs_ == 0) rpc_cv_.notify_all();
                             });
 }

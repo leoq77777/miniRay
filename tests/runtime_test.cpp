@@ -1,5 +1,9 @@
 #include "miniray/state.hpp"
+#include "miniray/object_store.hpp"
 #include "miniray/registry.hpp"
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <unistd.h>
 #include <gtest/gtest.h>
 #include <future>
 #include <thread>
@@ -398,4 +402,189 @@ TEST(State, SpeculativeSiblingSurvivesSingleWorkerExpiry) {
   EXPECT_FALSE(state.NextDispatch(now + 106ms));
   EXPECT_TRUE(Report(state, *hedge));
   EXPECT_EQ(Get(state, "race").status(), rpc::TASK_STATUS_COMPLETED);
+}
+
+TEST(ObjectStore, ZeroCopyShmSealCrcAndOrphanManifestSweep) {
+  std::string manifest = "/tmp/miniray_test_manifest_" + UniqueId() + ".log";
+  std::string shm_name;
+  {
+    ObjectStore writer("host-local", manifest);
+    std::string big_payload(2 * 1024 * 1024, '\0');
+    for (size_t i = 0; i < big_payload.size(); ++i) big_payload[i] = static_cast<char>((i * 131u) & 0xFFu);
+
+    auto ref = writer.Put("obj-2mb", big_payload, "w1", "127.0.0.1:50052");
+    shm_name = ref.shm_name();
+    EXPECT_LT(shm_name.size(), 31u); // Must satisfy macOS Darwin PSHMNAMLEN.
+
+    auto mapped = ObjectStore::MapReadOnly(shm_name, ref.size_bytes(), ref.crc32(), true);
+    EXPECT_TRUE(mapped.is_zero_copy_shm());
+    EXPECT_EQ(mapped.view(), big_payload);
+  }
+  // Destructor of writer unlinked its owned segment.
+  EXPECT_EQ(::shm_open(shm_name.c_str(), O_RDONLY, 0), -1);
+
+  // Simulate an orphaned POSIX shm segment left behind by a SIGKILLed process (non-existent PID 99999999).
+  std::string orphan_shm = "/mr_orphan_" + UniqueId().substr(0, 14);
+  int fd = ::shm_open(orphan_shm.c_str(), O_CREAT | O_EXCL | O_RDWR, 0600);
+  ASSERT_GE(fd, 0);
+  ASSERT_EQ(::ftruncate(fd, 128), 0);
+  ::close(fd);
+  {
+    int mfd = ::open(manifest.c_str(), O_CREAT | O_WRONLY | O_TRUNC, 0600);
+    ASSERT_GE(mfd, 0);
+    std::string entry = "99999999 " + orphan_shm + "\n";
+    ASSERT_EQ(::write(mfd, entry.data(), entry.size()), static_cast<ssize_t>(entry.size()));
+    ::close(mfd);
+  }
+  EXPECT_EQ(ObjectStore::SweepOrphans(manifest), 1u);
+  EXPECT_EQ(::shm_open(orphan_shm.c_str(), O_RDONLY, 0), -1);
+  ::unlink(manifest.c_str());
+}
+
+TEST(ObjectStore, SingleflightDeduplicatesConcurrentRemotePulls) {
+  std::string manifest = "/tmp/miniray_test_sf_" + UniqueId() + ".log";
+  ObjectStore store("host-B", manifest);
+  std::string payload(256 * 1024, 'Z');
+  rpc::ObjectRef remote_ref;
+  remote_ref.set_object_id("shared-remote-obj");
+  remote_ref.set_size_bytes(payload.size());
+  remote_ref.set_crc32(Crc32(payload));
+  remote_ref.set_host_id("host-A");
+  remote_ref.set_shm_name("/mr_inaccessible_remote");
+
+  std::atomic<int> network_pulls{0};
+  auto pull_fn = [&](const rpc::ObjectRef&) {
+    ++network_pulls;
+    std::this_thread::sleep_for(25ms);
+    return payload;
+  };
+
+  std::vector<std::future<bool>> readers;
+  for (int i = 0; i < 8; ++i) {
+    readers.push_back(std::async(std::launch::async, [&] {
+      auto view = store.Resolve(remote_ref, pull_fn);
+      return view.is_zero_copy_shm() && view.view() == payload;
+    }));
+  }
+  for (auto& f : readers) EXPECT_TRUE(f.get());
+  EXPECT_EQ(network_pulls.load(), 1);
+  ::unlink(manifest.c_str());
+}
+
+TEST(Scheduler, EftBalancesLocalityZeroCopyShmAndQueueDelay) {
+  EftLocalityScheduler scheduler;
+  std::vector<WorkerNode> workers{
+      {"w_owner", "", 2, 1, true, "host-1"},     // Slightly busy (50% load), holds object locally
+      {"w_colocated", "", 2, 0, true, "host-1"}, // Idle on same host (zero-copy shm mmap: 0.05ms)
+      {"w_remote", "", 2, 0, true, "host-2"},    // Idle on remote host
+  };
+
+  // 1. Large 64 MiB object: w_colocated (0ms queue + 0.05ms shm) beats w_owner (2.5ms queue) and w_remote (125ms pull).
+  SchedulingContext large_ctx;
+  large_ctx.avg_worker_exec_ms = 5.0;
+  large_ctx.network_bandwidth_bytes_per_ms = 512.0 * 1024.0;
+  large_ctx.dependencies.push_back({64ull * 1024 * 1024, {"w_owner"}, {"host-1"}});
+  EXPECT_EQ(scheduler.SelectWorkerForTask(workers, large_ctx), "w_colocated");
+
+  // 2. When w_colocated is saturated, w_owner (2.5ms queue + 0ms transfer) beats idle w_remote (125ms pull).
+  workers[1].active_tasks = 2;
+  EXPECT_EQ(scheduler.SelectWorkerForTask(workers, large_ctx), "w_owner");
+
+  // 3. Tiny 4 KiB object (~0.008ms pull): idle w_remote beats busy w_owner (2.5ms queue).
+  SchedulingContext small_ctx = large_ctx;
+  small_ctx.dependencies[0].size_bytes = 4096;
+  EXPECT_EQ(scheduler.SelectWorkerForTask(workers, small_ctx), "w_remote");
+}
+
+TEST(State, DiamondDagUnlockCascadeFailureAndLineageReconstruction) {
+  CoordinatorState state({16, 100ms, false});
+  auto now = Clock::now();
+  auto hb_host = [&](const std::string& id, const std::string& host, Clock::time_point t) {
+    rpc::HeartbeatRequest r; rpc::HeartbeatResponse s;
+    r.set_worker_id(id); r.set_worker_address("127.0.0.1:50052"); r.set_capacity(2); r.set_host_id(host);
+    ASSERT_TRUE(state.Heartbeat(r, s, t).ok());
+  };
+  hb_host("w1", "h1", now);
+  hb_host("w2", "h2", now);
+
+  auto submit_dag = [&](const std::string& id, std::initializer_list<std::string> deps, bool retryable = true) {
+    rpc::SubmitTaskRequest req = Request(id, 2);
+    req.set_retryable(retryable);
+    for (const auto& d : deps) req.add_dependencies(d);
+    rpc::SubmitTaskResponse resp;
+    ASSERT_TRUE(state.Submit(req, resp, now).ok());
+  };
+
+  // Diamond DAG: root -> (left, right) -> sink
+  submit_dag("root", {});
+  submit_dag("left", {"root"});
+  submit_dag("right", {"root"});
+  submit_dag("sink", {"left", "right"});
+
+  EXPECT_EQ(Get(state, "left").status(), rpc::TASK_STATUS_WAITING_DEPS);
+  EXPECT_EQ(Get(state, "sink").status(), rpc::TASK_STATUS_WAITING_DEPS);
+
+  auto d_root = state.NextDispatch(now); ASSERT_TRUE(d_root);
+  EXPECT_EQ(d_root->task.task_id(), "root");
+  EXPECT_FALSE(state.NextDispatch(now)); // left, right, sink all still waiting on root!
+
+  EXPECT_TRUE(Report(state, *d_root));
+  EXPECT_EQ(Get(state, "left").status(), rpc::TASK_STATUS_PENDING);
+  EXPECT_EQ(Get(state, "right").status(), rpc::TASK_STATUS_PENDING);
+  EXPECT_EQ(Get(state, "sink").status(), rpc::TASK_STATUS_WAITING_DEPS);
+
+  auto d_left = state.NextDispatch(now + 5ms); ASSERT_TRUE(d_left);
+  EXPECT_EQ(d_left->task.task_id(), "left");
+  EXPECT_EQ(d_left->worker_id, "w1");
+  auto d_right = state.NextDispatch(now + 5ms); ASSERT_TRUE(d_right);
+  EXPECT_EQ(d_right->task.task_id(), "right");
+  EXPECT_EQ(d_right->worker_id, "w2");
+  state.Dispatched(*d_left, true, now + 5ms);
+  state.Dispatched(*d_right, true, now + 5ms);
+
+  // "left" finishes on w1 and stores a 4 MiB out-of-band ObjectRef on w1!
+  {
+    rpc::ReportResultRequest r; rpc::ReportResultResponse s;
+    r.set_task_id(d_left->task.task_id());
+    r.set_attempt_id(d_left->task.attempt_id());
+    r.set_worker_id(d_left->worker_id);
+    r.set_status(rpc::TASK_STATUS_COMPLETED);
+    r.mutable_result_ref()->set_object_id(d_left->task.task_id());
+    r.mutable_result_ref()->set_size_bytes(4 * 1024 * 1024);
+    r.mutable_result_ref()->set_shm_name("/mr_fake_test_seg");
+    state.Report(r, s, now + 10ms);
+    ASSERT_TRUE(s.accepted());
+  }
+
+  // Before "right" finishes on w2, w1 (holding "left"'s only replica!) crashes!
+  hb_host("w2", "h2", now + 90ms);
+  state.Expire(now + 110ms);
+
+  // "left"'s object was lost on w1 while "sink" still depends on it -> Lineage Reconstruction reactivates "left"!
+  EXPECT_EQ(Get(state, "left").status(), rpc::TASK_STATUS_PENDING);
+  EXPECT_EQ(Get(state, "left").attempt_id(), 1u);
+
+  // Complete "right" (already running on surviving w2), then drain regenerated "left" and unlocked "sink"!
+  EXPECT_TRUE(Report(state, *d_right));
+  while (auto d = state.NextDispatch(now + 115ms)) {
+    EXPECT_EQ(d->worker_id, "w2");
+    rpc::ReportResultRequest r; rpc::ReportResultResponse s;
+    r.set_task_id(d->task.task_id());
+    r.set_attempt_id(d->task.attempt_id());
+    r.set_worker_id(d->worker_id);
+    r.set_status(rpc::TASK_STATUS_COMPLETED);
+    r.set_result("regenerated-" + d->task.task_id());
+    state.Report(r, s, now + 120ms);
+    ASSERT_TRUE(s.accepted());
+  }
+  EXPECT_EQ(Get(state, "sink").status(), rpc::TASK_STATUS_COMPLETED);
+
+  // Failure cascade: bad_root -> bad_child -> bad_grandchild
+  submit_dag("bad_root", {}, false);
+  submit_dag("bad_child", {"bad_root"});
+  submit_dag("bad_grandchild", {"bad_child"});
+  auto d_bad = state.NextDispatch(now + 130ms); ASSERT_TRUE(d_bad);
+  EXPECT_TRUE(Report(state, *d_bad, rpc::TASK_STATUS_FAILED, false));
+  EXPECT_EQ(Get(state, "bad_child").status(), rpc::TASK_STATUS_FAILED);
+  EXPECT_EQ(Get(state, "bad_grandchild").status(), rpc::TASK_STATUS_FAILED);
 }

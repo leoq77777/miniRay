@@ -8,9 +8,10 @@ int main(int argc, char** argv) {
         argc, argv, {"listen", "policy", "max-pending", "heartbeat-timeout-ms", "batch-size", "speculate"});
     miniray::CoordinatorOptions options;
     auto policy = args.Get("policy", "least-loaded");
-    if (policy != "least-loaded" && policy != "round-robin")
-      throw std::invalid_argument("policy must be least-loaded or round-robin");
+    if (policy != "least-loaded" && policy != "round-robin" && policy != "eft")
+      throw std::invalid_argument("policy must be least-loaded, round-robin, or eft");
     options.round_robin = policy == "round-robin";
+    options.eft_locality = policy != "round-robin";
     options.max_pending = args.Number("max-pending", 1024);
     options.heartbeat_timeout = std::chrono::milliseconds(args.Number("heartbeat-timeout-ms", 2500));
     options.max_batch_size = args.Number("batch-size", 16);

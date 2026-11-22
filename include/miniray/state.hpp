@@ -8,8 +8,10 @@
 #include <memory>
 #include <mutex>
 #include <optional>
+#include <set>
 #include <stop_token>
 #include <string>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -17,7 +19,7 @@ namespace miniray {
 using Clock = std::chrono::steady_clock;
 
 struct CoordinatorOptions {
-  size_t max_pending = 1024; // Includes reservations for running tasks that may need retrying.
+  size_t max_pending = 1024; // Includes reservations for running and waiting-deps tasks.
   std::chrono::milliseconds heartbeat_timeout{2500};
   bool round_robin = false;
   uint32_t max_batch_size = 16;
@@ -27,6 +29,9 @@ struct CoordinatorOptions {
   double speculation_multiplier = 1.5;
   std::chrono::milliseconds min_speculation_delay{15};
   size_t min_profile_samples = 8;
+  bool eft_locality = true;
+  double network_bandwidth_mb_per_s = 512.0;
+  std::chrono::milliseconds object_ttl{60000};
 };
 
 struct Dispatch {
@@ -100,16 +105,40 @@ class CoordinatorState {
     void Record(double ms);
     double P95() const;
   };
+  struct ReplicaInfo {
+    std::string worker_id;
+    std::string address;
+    std::string host_id;
+    std::string shm_name;
+  };
+  struct ObjectRecord {
+    rpc::ObjectRef meta;
+    std::map<std::string, ReplicaInfo> replicas; // worker_id -> ReplicaInfo
+    Clock::time_point last_used_at;
+  };
   struct Worker {
     WorkerNode node;
     Clock::time_point heartbeat;
     Clock::time_point unavailable_until{};
+    std::unordered_set<std::string> pending_evictions{};
   };
   using AttemptKey = std::pair<std::string, uint32_t>;
 
   bool HasReadyTasksLocked() const;
+  std::string PeekReadyTaskLocked(Clock::time_point now) const;
   void EnqueueReadyLocked(const std::string& id, bool urgent);
   std::string PopReadyTaskLocked(Clock::time_point now);
+  void EraseFromReadyQueuesLocked(const std::string& id);
+
+  bool IsDependencyReadyLocked(const std::string& dep_id) const;
+  bool AllDependenciesReadyLocked(const Task& task) const;
+  void ReleaseConsumerPinsLocked(const Task& task, Clock::time_point now);
+  void PopulateTaskArgsLocked(const Task& task, rpc::TaskSpec& spec) const;
+  SchedulingContext BuildSchedulingContextLocked(const Task& task) const;
+  void UnlockDependentsLocked(const std::string& completed_id, Clock::time_point now);
+  void CascadeFailureLocked(const std::string& failed_id, const std::string& reason, Clock::time_point now);
+  bool ReconstructLostObjectLocked(const std::string& obj_id, Clock::time_point now);
+
   std::vector<WorkerNode> BuildCandidateNodesLocked(Clock::time_point now,
                                                     const std::map<std::string, size_t>& batch_counts,
                                                     const std::string& exclude_worker = "") const;
@@ -120,6 +149,8 @@ class CoordinatorState {
   CoordinatorWork CollectWorkLocked(Clock::time_point now);
   Clock::time_point NextWakeupLocked(Clock::time_point now) const;
   void ReleaseWorkerSlotLocked(const std::string& worker_id);
+  void CancelActiveAttemptsLocked(Task& task, const std::string& reason);
+  void FailTaskTerminalLocked(Task& task, const std::string& error, Clock::time_point now);
   void FailOrRetryLocked(Task& task, const std::string& error, bool worker_expired, Clock::time_point now);
   void DispatchedLocked(const Dispatch& dispatch, bool accepted, Clock::time_point now);
   void ExpireLocked(Clock::time_point now);
@@ -132,6 +163,9 @@ class CoordinatorState {
   std::map<std::string, Task> tasks_;
   std::map<std::string, Worker> workers_;
   std::map<std::string, TaskProfile> profiles_;
+  std::map<std::string, ObjectRecord> objects_;
+  std::map<std::string, std::set<std::string>> dependents_;        // dep_id -> waiting task_ids (deterministic order)
+  std::map<std::string, std::set<std::string>> pending_consumers_; // dep_id -> non-terminal task_ids
   std::deque<std::string> recovery_queue_;
   std::deque<std::string> fast_queue_;
   std::deque<std::string> normal_queue_;

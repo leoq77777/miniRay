@@ -1,0 +1,6 @@
+# Homebrew's prebuilt libgrpc is not compiled with ThreadSanitizer instrumentation,
+# so TSan cannot observe the release-acquire handoff inside libgrpc's EventEngine /
+# completion queue between inline grpcpp CallbackUnaryCallImpl construction and
+# CallbackWithStatusTag::StaticRun invocation.
+race:grpc::internal::CallbackWithStatusTag
+race:grpc::internal::CallbackUnaryCallImpl

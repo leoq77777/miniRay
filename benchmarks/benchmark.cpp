@@ -101,11 +101,16 @@ Recovery InjectFailure(miniray::rpc::CoordinatorService::Stub& stub, const std::
 }
 int main(int argc, char** argv) {
   try {
-    miniray::Arguments args(argc, argv, {"coordinator", "tasks", "workload", "mode", "slots", "warmup", "pattern", "kill-worker-id", "kill-worker-pid"});
+    miniray::Arguments args(argc, argv, {"coordinator", "tasks", "workload", "mode", "slots", "warmup", "pattern",
+                                         "kill-worker-id", "kill-worker-pid", "blob-bytes", "fanout"});
     auto count = args.Number("tasks", 400);
     auto slots = args.Number("slots", 4);
     auto warmup = args.Number("warmup", 16);
+    auto blob_bytes = args.Number("blob-bytes", 64 * 1024 * 1024);
+    auto fanout = args.Number("fanout", 8);
     if (slots > 1024 || count > 100000 || warmup > 1000) throw std::invalid_argument("slots <=1024, tasks <=100000, warmup <=1000 required");
+    if (fanout == 0 || fanout > 256 || blob_bytes == 0 || blob_bytes > 128 * 1024 * 1024)
+      throw std::invalid_argument("1 <= fanout <= 256 and 1 <= blob-bytes <= 134217728 required");
     auto mode = args.Get("mode", "remote");
     auto workload = args.Get("workload", "uniform");
     auto pattern = args.Get("pattern", "burst");
@@ -113,14 +118,60 @@ int main(int argc, char** argv) {
     uint32_t pid = args.Get("kill-worker-pid", "").empty() ? 0 : args.Number("kill-worker-pid", 1);
     if (mode != "remote" && mode != "local" && mode != "thread-pool" && mode != "rpc") throw std::invalid_argument("mode: remote, local, thread-pool, rpc");
     if (workload != "uniform" && workload != "mixed" && workload != "tiny" && workload != "failure" &&
-        workload != "straggler")
-      throw std::invalid_argument("workload: uniform, mixed, tiny, failure, straggler");
+        workload != "straggler" && workload != "dag-object")
+      throw std::invalid_argument("workload: uniform, mixed, tiny, failure, straggler, dag-object");
     if (pattern != "serial" && pattern != "burst") throw std::invalid_argument("pattern: serial, burst");
     if (mode == "rpc" && (workload != "tiny" || pattern != "serial")) throw std::invalid_argument("rpc baseline requires tiny/serial");
+    if (workload == "dag-object" && mode != "remote") throw std::invalid_argument("dag-object requires remote mode");
     if ((!worker.empty() || pid) && (worker.empty() || pid <= 1 || pid > uint32_t(std::numeric_limits<pid_t>::max()) ||
         mode != "remote" || pattern != "burst" || workload != "failure")) throw std::invalid_argument("fault injection requires worker ID and PID, remote/burst/failure");
     auto address = args.Get("coordinator", "localhost:50051");
     miniray::MiniRayClient client(address);
+    if (workload == "dag-object") {
+      auto percentile = [](const std::vector<double>& samples, double q) {
+        return samples.empty() ? 0.0 : samples[std::max<size_t>(1, std::ceil(q * samples.size())) - 1];
+      };
+      auto run_wave = [&](uint64_t& zero_copy_hits) {
+        const auto wave_start = Clock::now();
+        auto producer = client.Submit("blob_produce", std::to_string(blob_bytes));
+        std::vector<miniray::TaskFuture> consumers;
+        consumers.reserve(fanout);
+        for (uint32_t j = 0; j < fanout; ++j) {
+          consumers.push_back(client.SubmitDag("blob_reduce", std::to_string(j), {producer}));
+        }
+        for (const auto& consumer : consumers) {
+          const auto out = consumer.Get(std::chrono::seconds(60));
+          const auto first = out.find(':');
+          const auto second = out.find(':', first == std::string::npos ? 0 : first + 1);
+          if (first == std::string::npos || second == std::string::npos) {
+            throw std::runtime_error("unexpected blob_reduce output: " + out);
+          }
+          if (std::stoull(out.substr(0, first)) != blob_bytes) {
+            throw std::runtime_error("blob_reduce byte count mismatch: " + out);
+          }
+          zero_copy_hits += std::stoull(out.substr(first + 1, second - first - 1));
+        }
+        return std::chrono::duration<double, std::milli>(Clock::now() - wave_start).count();
+      };
+      uint64_t warmup_zc = 0;
+      for (uint32_t i = 0; i < warmup; ++i) run_wave(warmup_zc);
+      std::vector<double> wave_ms;
+      wave_ms.reserve(count);
+      uint64_t zero_copy_hits = 0;
+      const auto begin_waves = Clock::now();
+      for (uint32_t i = 0; i < count; ++i) wave_ms.push_back(run_wave(zero_copy_hits));
+      const double elapsed_s = std::chrono::duration<double>(Clock::now() - begin_waves).count();
+      std::sort(wave_ms.begin(), wave_ms.end());
+      const double total_consumed_gib =
+          (static_cast<double>(count) * static_cast<double>(fanout) * static_cast<double>(blob_bytes)) /
+          (1024.0 * 1024.0 * 1024.0);
+      std::cout << "waves,fanout,blob_bytes,zero_copy_hits,total_consumers,elapsed_s,waves_per_s,logical_gib_per_s,wave_p50_ms,wave_p95_ms,wave_p99_ms\n"
+                << count << ',' << fanout << ',' << blob_bytes << ',' << zero_copy_hits << ','
+                << (static_cast<uint64_t>(count) * fanout) << ',' << elapsed_s << ',' << (count / elapsed_s) << ','
+                << (total_consumed_gib / elapsed_s) << ',' << percentile(wave_ms, .50) << ','
+                << percentile(wave_ms, .95) << ',' << percentile(wave_ms, .99) << '\n';
+      return 0;
+    }
     auto stub = miniray::rpc::CoordinatorService::NewStub(grpc::CreateChannel(address, grpc::InsecureChannelCredentials()));
     miniray::TaskRegistry registry;
     miniray::RegisterBuiltins(registry);
