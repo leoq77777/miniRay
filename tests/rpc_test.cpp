@@ -128,3 +128,78 @@ TEST(Rpc, ReportingRetriesAndPersistentFailureIsolatesWorker) {
     cs->Shutdown(); cs->Wait();
   }
 }
+
+TEST(Rpc, SpeculativeHedgingAndCooperativeCancellationCutStragglerLatency) {
+  CoordinatorOptions coord_opts;
+  coord_opts.max_pending = 32;
+  coord_opts.heartbeat_timeout = 1000ms;
+  coord_opts.enable_speculation = true;
+  coord_opts.min_profile_samples = 4;
+  coord_opts.min_speculation_delay = 15ms;
+  coord_opts.speculation_multiplier = 1.5;
+  CoordinatorService coordinator(coord_opts);
+  int cp = 0; auto cs = Serve(coordinator, cp); ASSERT_TRUE(cs);
+
+  std::atomic<int> cancelled_count{0};
+  TaskRegistry slow_registry;
+  slow_registry.RegisterCancellableTask("hedged_op", [&](const std::string& payload, const CancellationToken& token) {
+    if (payload == "straggler") {
+      auto end = Clock::now() + 600ms;
+      while (Clock::now() < end) {
+        if (token.IsCancelled()) {
+          ++cancelled_count;
+          throw TaskCancelledError();
+        }
+        std::this_thread::sleep_for(5ms);
+      }
+    } else {
+      std::this_thread::sleep_for(4ms);
+    }
+    return payload + "-ok";
+  });
+
+  TaskRegistry fast_registry;
+  fast_registry.RegisterCancellableTask("hedged_op", [](const std::string& payload, const CancellationToken&) {
+    std::this_thread::sleep_for(4ms);
+    return payload + "-ok";
+  });
+
+  WorkerOptions w1_opts; w1_opts.id = "00-slow-worker"; w1_opts.coordinator = Address(cp); w1_opts.capacity = 2; w1_opts.heartbeat_interval = 30ms;
+  WorkerOptions w2_opts; w2_opts.id = "99-fast-worker"; w2_opts.coordinator = Address(cp); w2_opts.capacity = 2; w2_opts.heartbeat_interval = 30ms;
+  WorkerService w_slow(w1_opts, slow_registry);
+  WorkerService w_fast(w2_opts, fast_registry);
+  int wp1 = 0, wp2 = 0;
+  auto ws1 = Serve(w_slow, wp1); ASSERT_TRUE(ws1);
+  auto ws2 = Serve(w_fast, wp2); ASSERT_TRUE(ws2);
+  w_slow.Start(Address(wp1));
+  w_fast.Start(Address(wp2));
+
+  MiniRayClient client(Address(cp));
+  for (int i = 0; i < 6; ++i) {
+    EXPECT_EQ(client.Submit("hedged_op", "warm").Get(3s), "warm-ok");
+  }
+
+  // With both workers idle, LeastLoaded tie-breaks by lexicographical ID ("00-slow-worker" first),
+  // stalls for >15ms, then hedges onto "99-fast-worker" and cancels the 600ms straggler!
+  auto t0 = Clock::now();
+  auto res = client.Submit("hedged_op", "straggler").Wait(3s);
+  double elapsed_ms = std::chrono::duration<double, std::milli>(Clock::now() - t0).count();
+  EXPECT_EQ(res.status(), rpc::TASK_STATUS_COMPLETED);
+  EXPECT_EQ(res.result(), "straggler-ok");
+  EXPECT_EQ(res.worker_id(), "99-fast-worker");
+  EXPECT_EQ(res.attempt_id(), 1u);
+  EXPECT_LT(elapsed_ms, 250.0);
+
+  auto wait_cancel = Clock::now() + 1s;
+  while (cancelled_count.load() == 0 && Clock::now() < wait_cancel) std::this_thread::sleep_for(5ms);
+  EXPECT_GE(cancelled_count.load(), 1);
+
+  // Verify all 4 slots across both workers remain healthy and leak-free afterwards.
+  std::vector<TaskFuture> burst;
+  for (int i = 0; i < 16; ++i) burst.push_back(client.Submit("hedged_op", "warm"));
+  for (auto& f : burst) EXPECT_EQ(f.Get(3s), "warm-ok");
+
+  w_slow.Stop(); ws1->Shutdown(); ws1->Wait();
+  w_fast.Stop(); ws2->Shutdown(); ws2->Wait();
+  coordinator.Stop(); cs->Shutdown(); cs->Wait();
+}

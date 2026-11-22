@@ -42,6 +42,17 @@ message GetTaskResultResponse {
 }
 message DispatchTaskRequest { TaskSpec task = 1; }
 message DispatchTaskResponse { bool accepted = 1; string error_message = 2; }
+message DispatchBatchRequest { repeated TaskSpec tasks = 1; }
+message DispatchBatchResponse { repeated DispatchTaskResponse results = 1; }
+message CancelTaskRequest {
+  string task_id = 1;
+  uint32 attempt_id = 2;
+  string reason = 3;
+}
+message CancelTaskResponse {
+  bool cancelled_or_absent = 1;
+  bool slot_freed = 2;
+}
 message HeartbeatRequest {
   string worker_id = 1; // Unique for each worker process incarnation.
   string worker_address = 2;
@@ -68,4 +79,6 @@ service CoordinatorService {
 }
 service WorkerService {
   rpc DispatchTask(DispatchTaskRequest) returns (DispatchTaskResponse);
+  rpc DispatchBatch(DispatchBatchRequest) returns (DispatchBatchResponse);
+  rpc CancelTask(CancelTaskRequest) returns (CancelTaskResponse);
 }

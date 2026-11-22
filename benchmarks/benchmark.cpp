@@ -112,7 +112,9 @@ int main(int argc, char** argv) {
     auto worker = args.Get("kill-worker-id", "");
     uint32_t pid = args.Get("kill-worker-pid", "").empty() ? 0 : args.Number("kill-worker-pid", 1);
     if (mode != "remote" && mode != "local" && mode != "thread-pool" && mode != "rpc") throw std::invalid_argument("mode: remote, local, thread-pool, rpc");
-    if (workload != "uniform" && workload != "mixed" && workload != "tiny" && workload != "failure") throw std::invalid_argument("workload: uniform, mixed, tiny, failure");
+    if (workload != "uniform" && workload != "mixed" && workload != "tiny" && workload != "failure" &&
+        workload != "straggler")
+      throw std::invalid_argument("workload: uniform, mixed, tiny, failure, straggler");
     if (pattern != "serial" && pattern != "burst") throw std::invalid_argument("pattern: serial, burst");
     if (mode == "rpc" && (workload != "tiny" || pattern != "serial")) throw std::invalid_argument("rpc baseline requires tiny/serial");
     if ((!worker.empty() || pid) && (worker.empty() || pid <= 1 || pid > uint32_t(std::numeric_limits<pid_t>::max()) ||
@@ -136,6 +138,7 @@ int main(int argc, char** argv) {
     auto payload = [&](uint32_t i) -> std::string {
       if (workload == "tiny") return "x";
       if (workload == "failure") return "250";
+      if (workload == "straggler") return i % 25 == 24 ? "250" : "5";
       return workload == "mixed" && i % 20 == 0 ? "100" : "5";
     };
     uint32_t connection_warmup = mode == "remote" ? std::min(slots * 2, 1024u) : 0;

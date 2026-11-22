@@ -21,9 +21,16 @@ void RegisterBuiltins(TaskRegistry& registry) {
     for (uint64_t i = 0; i < n; ++i) { auto next = a + b; a = b; b = next; }
     return std::to_string(a);
   });
-  registry.RegisterTask("sleep", [](const std::string& payload) {
+  registry.RegisterCancellableTask("sleep", [](const std::string& payload, const CancellationToken& token) {
     auto duration = Number(payload, 60000);
-    std::this_thread::sleep_for(std::chrono::milliseconds(duration));
+    const auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(duration);
+    while (std::chrono::steady_clock::now() < deadline) {
+      if (token.IsCancelled()) throw TaskCancelledError();
+      auto remaining = deadline - std::chrono::steady_clock::now();
+      if (remaining <= std::chrono::steady_clock::duration::zero()) break;
+      std::this_thread::sleep_for(std::min<std::chrono::nanoseconds>(remaining, std::chrono::milliseconds(5)));
+    }
+    if (token.IsCancelled()) throw TaskCancelledError();
     return payload;
   });
 }

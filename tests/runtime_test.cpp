@@ -209,3 +209,193 @@ TEST(State, FailedDispatchPreservesOtherActiveAttempts) {
   EXPECT_EQ(retry->worker_id, "replacement");
   EXPECT_TRUE(Report(state, *retry));
 }
+
+TEST(State, RecoveryQueuePreemptsQueuedBacklogOnWorkerCrash) {
+  CoordinatorState state({16, 100ms, false});
+  auto now = Clock::now();
+  Heartbeat(state, "a", 1, now);
+  Heartbeat(state, "b", 1, now);
+  for (int i = 0; i < 8; ++i) {
+    rpc::SubmitTaskResponse s;
+    ASSERT_TRUE(state.Submit(Request("t" + std::to_string(i)), s, now + std::chrono::milliseconds(i)).ok());
+  }
+  auto d0 = state.NextDispatch(now + 10ms); ASSERT_TRUE(d0); EXPECT_EQ(d0->task.task_id(), "t0");
+  auto d1 = state.NextDispatch(now + 10ms); ASSERT_TRUE(d1); EXPECT_EQ(d1->task.task_id(), "t1");
+  state.Dispatched(*d0, true, now + 10ms);
+  state.Dispatched(*d1, true, now + 10ms);
+  Heartbeat(state, "b", 1, now + 80ms);
+  state.Expire(now + 105ms);
+  EXPECT_EQ(Get(state, "t0").status(), rpc::TASK_STATUS_PENDING);
+  EXPECT_EQ(Get(state, "t0").attempt_id(), 1u);
+  EXPECT_TRUE(Report(state, *d1));
+  auto preempted = state.NextDispatch(now + 106ms);
+  ASSERT_TRUE(preempted);
+  EXPECT_EQ(preempted->task.task_id(), "t0");
+  EXPECT_EQ(preempted->task.attempt_id(), 1u);
+  EXPECT_EQ(preempted->worker_id, "b");
+}
+
+TEST(State, FastQueueMitigatesHeadOfLineWithAgingAntiStarvation) {
+  CoordinatorOptions opts;
+  opts.fast_task_threshold = 10ms;
+  opts.aging_threshold = 50ms;
+  CoordinatorState state(opts);
+  auto now = Clock::now();
+  Heartbeat(state, "w", 1, now);
+  auto submit_typed = [&](const std::string& id, const std::string& type, Clock::time_point t) {
+    rpc::SubmitTaskRequest req = Request(id);
+    req.set_task_type(type);
+    rpc::SubmitTaskResponse resp;
+    ASSERT_TRUE(state.Submit(req, resp, t).ok());
+  };
+  auto report_exec = [&](const Dispatch& d, double exec_ms, Clock::time_point t) {
+    rpc::ReportResultRequest r; rpc::ReportResultResponse s;
+    r.set_task_id(d.task.task_id()); r.set_attempt_id(d.task.attempt_id()); r.set_worker_id(d.worker_id);
+    r.set_status(rpc::TASK_STATUS_COMPLETED); r.set_result("ok"); r.set_execution_ms(exec_ms);
+    state.Report(r, s, t);
+    ASSERT_TRUE(s.accepted());
+  };
+  submit_typed("warm-fast", "fast_op", now);
+  auto wf = state.NextDispatch(now); ASSERT_TRUE(wf);
+  report_exec(*wf, 2.0, now + 2ms);
+  submit_typed("warm-slow", "slow_op", now + 3ms);
+  auto ws = state.NextDispatch(now + 3ms); ASSERT_TRUE(ws);
+  report_exec(*ws, 40.0, now + 43ms);
+
+  // Occupy the single worker slot so subsequent submissions queue up.
+  submit_typed("holder", "fast_op", now + 50ms);
+  auto holder = state.NextDispatch(now + 50ms); ASSERT_TRUE(holder);
+
+  submit_typed("slow-1", "slow_op", now + 51ms);
+  submit_typed("fast-1", "fast_op", now + 52ms);
+  report_exec(*holder, 2.0, now + 55ms);
+
+  // Before aging_threshold (50ms), fast-1 bypasses slow-1.
+  auto next1 = state.NextDispatch(now + 55ms); ASSERT_TRUE(next1);
+  EXPECT_EQ(next1->task.task_id(), "fast-1");
+
+  // Once slow-1 has waited >= 50ms (51ms -> 105ms), aging promotes slow-1 ahead of newly submitted fast-2.
+  submit_typed("fast-2", "fast_op", now + 100ms);
+  report_exec(*next1, 2.0, now + 105ms);
+  auto next2 = state.NextDispatch(now + 105ms); ASSERT_TRUE(next2);
+  EXPECT_EQ(next2->task.task_id(), "slow-1");
+}
+
+TEST(State, SpeculativeExecutionRacesStragglerFencesLoserAndConservesSlots) {
+  CoordinatorOptions opts;
+  opts.max_pending = 8;
+  opts.heartbeat_timeout = 500ms;
+  opts.enable_speculation = true;
+  opts.min_profile_samples = 4;
+  opts.min_speculation_delay = 10ms;
+  opts.speculation_multiplier = 1.5;
+  CoordinatorState state(opts);
+  auto now = Clock::now();
+  Heartbeat(state, "a", 1, now);
+  Heartbeat(state, "b", 1, now);
+
+  // Train profile on 4 fast completions (4ms each -> P95 = 4ms, threshold = max(10ms, 6ms) = 10ms).
+  for (int i = 0; i < 4; ++i) {
+    rpc::SubmitTaskResponse resp;
+    ASSERT_TRUE(state.Submit(Request("warm-" + std::to_string(i)), resp, now).ok());
+    auto d = state.NextDispatch(now); ASSERT_TRUE(d);
+    rpc::ReportResultRequest r; rpc::ReportResultResponse s;
+    r.set_task_id(d->task.task_id()); r.set_attempt_id(d->task.attempt_id()); r.set_worker_id(d->worker_id);
+    r.set_status(rpc::TASK_STATUS_COMPLETED); r.set_result("warm"); r.set_execution_ms(4.0);
+    state.Report(r, s, now + 4ms);
+    ASSERT_TRUE(s.accepted());
+  }
+
+  now += 20ms;
+  rpc::SubmitTaskResponse resp;
+  ASSERT_TRUE(state.Submit(Request("hedged-task"), resp, now).ok());
+  auto orig = state.NextDispatch(now); ASSERT_TRUE(orig);
+  EXPECT_EQ(orig->worker_id, "a");
+  EXPECT_EQ(orig->task.attempt_id(), 0u);
+  state.Dispatched(*orig, true, now);
+
+  // Too early for speculation at +5ms.
+  EXPECT_FALSE(state.NextDispatch(now + 5ms));
+
+  // At +12ms (>= 10ms threshold) with empty queue, launches speculative replica on anti-affine worker "b".
+  auto hedge = state.NextDispatch(now + 12ms);
+  ASSERT_TRUE(hedge);
+  EXPECT_EQ(hedge->task.task_id(), "hedged-task");
+  EXPECT_EQ(hedge->task.attempt_id(), 1u);
+  EXPECT_EQ(hedge->worker_id, "b");
+  state.Dispatched(*hedge, true, now + 12ms);
+  // No 3rd replica is spawned.
+  EXPECT_FALSE(state.NextDispatch(now + 30ms));
+
+  // Hedge replica on "b" finishes first!
+  {
+    rpc::ReportResultRequest r; rpc::ReportResultResponse s;
+    r.set_task_id("hedged-task"); r.set_attempt_id(1); r.set_worker_id("b");
+    r.set_status(rpc::TASK_STATUS_COMPLETED); r.set_result("fast-winner"); r.set_execution_ms(4.0);
+    state.Report(r, s, now + 16ms);
+    EXPECT_TRUE(s.accepted());
+  }
+  auto cancels = state.DrainCancels();
+  ASSERT_EQ(cancels.size(), 1u);
+  EXPECT_EQ(cancels[0].task_id, "hedged-task");
+  EXPECT_EQ(cancels[0].attempt_id, 0u);
+  EXPECT_EQ(cancels[0].worker_id, "a");
+
+  // Worker "a"'s slot stays reserved while its running handler drains (slot_freed = false).
+  state.CancelAck(cancels[0], false);
+  ASSERT_TRUE(state.Submit(Request("follow-1"), resp, now + 17ms).ok());
+  ASSERT_TRUE(state.Submit(Request("follow-2"), resp, now + 17ms).ok());
+  auto f1 = state.NextDispatch(now + 17ms); ASSERT_TRUE(f1);
+  EXPECT_EQ(f1->worker_id, "b");
+  EXPECT_FALSE(state.NextDispatch(now + 17ms)); // "a" still draining cancelled attempt 0!
+
+  // Late report from "a" is fenced (accepted=false), preserves winner result, and releases "a"'s slot.
+  {
+    rpc::ReportResultRequest r; rpc::ReportResultResponse s;
+    r.set_task_id("hedged-task"); r.set_attempt_id(0); r.set_worker_id("a");
+    r.set_status(rpc::TASK_STATUS_COMPLETED); r.set_result("stale-loser"); r.set_execution_ms(50.0);
+    state.Report(r, s, now + 50ms);
+    EXPECT_FALSE(s.accepted());
+  }
+  EXPECT_EQ(Get(state, "hedged-task").result(), "fast-winner");
+  EXPECT_EQ(Get(state, "hedged-task").attempt_id(), 1u);
+  auto f2 = state.NextDispatch(now + 51ms); ASSERT_TRUE(f2);
+  EXPECT_EQ(f2->worker_id, "a");
+}
+
+TEST(State, SpeculativeSiblingSurvivesSingleWorkerExpiry) {
+  CoordinatorOptions opts;
+  opts.heartbeat_timeout = 100ms;
+  opts.enable_speculation = true;
+  opts.min_profile_samples = 2;
+  opts.min_speculation_delay = 10ms;
+  CoordinatorState state(opts);
+  auto now = Clock::now();
+  Heartbeat(state, "a", 1, now);
+  Heartbeat(state, "b", 1, now);
+  for (int i = 0; i < 2; ++i) {
+    rpc::SubmitTaskResponse resp;
+    ASSERT_TRUE(state.Submit(Request("w" + std::to_string(i)), resp, now).ok());
+    auto d = state.NextDispatch(now); ASSERT_TRUE(d);
+    rpc::ReportResultRequest r; rpc::ReportResultResponse s;
+    r.set_task_id(d->task.task_id()); r.set_attempt_id(d->task.attempt_id()); r.set_worker_id(d->worker_id);
+    r.set_status(rpc::TASK_STATUS_COMPLETED); r.set_result("ok"); r.set_execution_ms(3.0);
+    state.Report(r, s, now + 3ms);
+  }
+  now += 10ms;
+  rpc::SubmitTaskResponse resp;
+  ASSERT_TRUE(state.Submit(Request("race"), resp, now).ok());
+  auto orig = state.NextDispatch(now); ASSERT_TRUE(orig); EXPECT_EQ(orig->worker_id, "a");
+  state.Dispatched(*orig, true, now);
+  auto hedge = state.NextDispatch(now + 15ms); ASSERT_TRUE(hedge); EXPECT_EQ(hedge->worker_id, "b");
+  state.Dispatched(*hedge, true, now + 15ms);
+
+  // Refresh "b", let "a" expire: task must stay RUNNING on "b" without re-entering pending queue.
+  Heartbeat(state, "b", 1, now + 80ms);
+  state.Expire(now + 105ms);
+  EXPECT_EQ(Get(state, "race").status(), rpc::TASK_STATUS_RUNNING);
+  EXPECT_EQ(Get(state, "race").worker_id(), "b");
+  EXPECT_FALSE(state.NextDispatch(now + 106ms));
+  EXPECT_TRUE(Report(state, *hedge));
+  EXPECT_EQ(Get(state, "race").status(), rpc::TASK_STATUS_COMPLETED);
+}

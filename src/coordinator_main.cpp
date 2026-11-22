@@ -4,13 +4,20 @@
 
 int main(int argc, char** argv) {
   try {
-    miniray::Arguments args(argc, argv, {"listen", "policy", "max-pending", "heartbeat-timeout-ms"});
+    miniray::Arguments args(
+        argc, argv, {"listen", "policy", "max-pending", "heartbeat-timeout-ms", "batch-size", "speculate"});
     miniray::CoordinatorOptions options;
     auto policy = args.Get("policy", "least-loaded");
-    if (policy != "least-loaded" && policy != "round-robin") throw std::invalid_argument("policy must be least-loaded or round-robin");
+    if (policy != "least-loaded" && policy != "round-robin")
+      throw std::invalid_argument("policy must be least-loaded or round-robin");
     options.round_robin = policy == "round-robin";
     options.max_pending = args.Number("max-pending", 1024);
     options.heartbeat_timeout = std::chrono::milliseconds(args.Number("heartbeat-timeout-ms", 2500));
+    options.max_batch_size = args.Number("batch-size", 16);
+    auto speculate = args.Get("speculate", "off");
+    if (speculate == "on" || speculate == "true" || speculate == "1") options.enable_speculation = true;
+    else if (speculate == "off" || speculate == "false" || speculate == "0") options.enable_speculation = false;
+    else throw std::invalid_argument("speculate must be on/off, true/false, or 1/0");
     miniray::CoordinatorService service(options);
     grpc::ServerBuilder builder;
     auto address = args.Get("listen", "0.0.0.0:50051");

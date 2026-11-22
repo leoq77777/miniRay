@@ -7,6 +7,7 @@
 #include <deque>
 #include <mutex>
 #include <thread>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -26,7 +27,12 @@ class WorkerService final : public rpc::WorkerService::Service {
   void Stop(); // Drain accepted work and report results before stopping heartbeats.
   const std::string& id() const { return options_.id; }
   grpc::Status DispatchTask(grpc::ServerContext*, const rpc::DispatchTaskRequest*, rpc::DispatchTaskResponse*) override;
+  grpc::Status DispatchBatch(grpc::ServerContext*, const rpc::DispatchBatchRequest*, rpc::DispatchBatchResponse*) override;
+  grpc::Status CancelTask(grpc::ServerContext*, const rpc::CancelTaskRequest*, rpc::CancelTaskResponse*) override;
  private:
+  static std::string AttemptKey(const std::string& task_id, uint32_t attempt_id);
+  static bool ValidTaskSpec(const rpc::TaskSpec& task);
+  bool AdmitLocked(const rpc::TaskSpec& task, rpc::DispatchTaskResponse& response);
   void ExecuteLoop();
   void Report(const rpc::ReportResultRequest&);
   WorkerOptions options_;
@@ -36,6 +42,8 @@ class WorkerService final : public rpc::WorkerService::Service {
   std::condition_variable ready_;
   std::deque<rpc::TaskSpec> queue_;
   std::unordered_set<std::string> seen_;
+  std::unordered_set<std::string> cancelled_;
+  std::unordered_map<std::string, CancellationToken> running_tokens_;
   uint32_t active_ = 0;
   bool stopping_ = false;
   std::atomic<bool> isolated_{false};
