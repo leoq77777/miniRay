@@ -5,6 +5,7 @@ import hashlib
 import io
 import json
 import math
+import os
 import platform
 import random
 import select
@@ -17,6 +18,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def loopback_env():
+    env = dict(os.environ)
+    for key in ('http_proxy', 'https_proxy', 'HTTP_PROXY', 'HTTPS_PROXY', 'all_proxy', 'ALL_PROXY'):
+        env.pop(key, None)
+    env['no_proxy'] = '127.0.0.1,localhost'
+    env['NO_PROXY'] = '127.0.0.1,localhost'
+    return env
+
+
 def available_port():
     with socket.socket() as sock:
         sock.bind(('127.0.0.1', 0))
@@ -26,7 +36,7 @@ def available_port():
 def start(command, processes, logs, log_path):
     log = log_path.open('w')
     logs.append(log)
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=log, text=True)
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=log, text=True, env=loopback_env())
     processes.append(process)
     ready, _, _ = select.select([process.stdout], [], [], 10)
     line = process.stdout.readline() if ready else ''
@@ -121,7 +131,7 @@ def measure(case, repeat, args):
                    '--workload', case['workload'], '--warmup', str(2 if case['scenario'] in ['failure', 'overload'] else args.warmup)]
         if case['scenario'] == 'failure':
             command += ['--kill-worker-pid', str(victim[0].pid), '--kill-worker-id', victim[1]]
-        completed = subprocess.run(command, capture_output=True, text=True, timeout=120)
+        completed = subprocess.run(command, capture_output=True, text=True, timeout=120, env=loopback_env())
         expected_code = 2 if case['scenario'] == 'overload' else 0
         if completed.returncode != expected_code:
             raise RuntimeError(f'benchmark exit {completed.returncode}: {completed.stderr}; see {log_prefix}.*.log')

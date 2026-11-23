@@ -33,6 +33,21 @@ void RegisterBuiltins(TaskRegistry& registry) {
     if (token.IsCancelled()) throw TaskCancelledError();
     return payload;
   });
+  registry.RegisterCancellableTask("jitter_sleep", [](const std::string& payload, const CancellationToken& token) {
+    static std::atomic<uint64_t> exec_seq{0};
+    const auto base_ms = Number(payload, 60000);
+    const bool is_straggler = (exec_seq.fetch_add(1, std::memory_order_relaxed) % 25ull) == 24ull;
+    const auto duration = is_straggler ? std::max<uint64_t>(base_ms * 50ull, 250ull) : base_ms;
+    const auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(duration);
+    while (std::chrono::steady_clock::now() < deadline) {
+      if (token.IsCancelled()) throw TaskCancelledError();
+      auto remaining = deadline - std::chrono::steady_clock::now();
+      if (remaining <= std::chrono::steady_clock::duration::zero()) break;
+      std::this_thread::sleep_for(std::min<std::chrono::nanoseconds>(remaining, std::chrono::milliseconds(2)));
+    }
+    if (token.IsCancelled()) throw TaskCancelledError();
+    return payload;
+  });
   registry.RegisterTask("blob_produce", [](const std::string& payload) {
     const auto bytes = Number(payload, 128ull * 1024 * 1024);
     std::string out(static_cast<size_t>(bytes), '\0');

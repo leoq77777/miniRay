@@ -185,11 +185,11 @@ int main(int argc, char** argv) {
       auto status = stub->GetTaskResult(&context, request, &response);
       if (status.error_code() != grpc::StatusCode::NOT_FOUND) throw std::runtime_error("unexpected RPC baseline status");
     };
-    std::string type = workload == "tiny" ? "echo" : "sleep";
+    std::string type = workload == "tiny" ? "echo" : (workload == "straggler" ? "jitter_sleep" : "sleep");
     auto payload = [&](uint32_t i) -> std::string {
       if (workload == "tiny") return "x";
       if (workload == "failure") return "250";
-      if (workload == "straggler") return i % 25 == 24 ? "250" : "5";
+      if (workload == "straggler") return "5";
       return workload == "mixed" && i % 20 == 0 ? "100" : "5";
     };
     uint32_t connection_warmup = mode == "remote" ? std::min(slots * 2, 1024u) : 0;
